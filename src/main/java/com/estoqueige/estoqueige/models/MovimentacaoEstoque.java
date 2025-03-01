@@ -38,7 +38,7 @@ public class MovimentacaoEstoque {
     @NotNull
     private Float movEstQtd;
 
-    /* */
+    /* Chaves estrangeiras */
 
     @ManyToOne
     @JoinColumn(name = "movEstMovimentacao", nullable = false)

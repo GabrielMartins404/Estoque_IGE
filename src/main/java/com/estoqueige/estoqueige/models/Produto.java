@@ -46,7 +46,7 @@ public class Produto {
     @JsonBackReference
     private List<ProdutoMovimentacao> produtoMovimentacoes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "proEsProduto")
+    @OneToMany(mappedBy = "movEstProduto")
     @JsonBackReference
     private List<MovimentacaoEstoque> produtoEstoque = new ArrayList<>();
 

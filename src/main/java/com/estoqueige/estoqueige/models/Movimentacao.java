@@ -47,7 +47,7 @@ public class Movimentacao {
     @NotBlank
     private String movTipo;
 
-    /*  */
+    /* Chaves estrangeiras */
 
     @ManyToOne
     @JoinColumn(name = "movUsuario", nullable = false)
