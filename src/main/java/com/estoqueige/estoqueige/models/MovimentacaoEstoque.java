@@ -19,7 +19,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 @Entity
 @Table(name = MovimentacaoEstoque.TABLE_NAME)
 public class MovimentacaoEstoque {
-    public static final String TABLE_NAME = "produtoEstoque";
+    public static final String TABLE_NAME = "movimentacaoEstoque";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +38,14 @@ public class MovimentacaoEstoque {
     @NotNull
     private Float movEstQtd;
 
+    @Column(name = "movEstQtdAnterior", nullable = false)
+    @NotNull
+    private Float movEstQtdAnterior;
+
+    @Column(name = "movEstQtdPosterior", nullable = false)
+    @NotNull
+    private Float movEstQtdPosterior;
+
     /* Chaves estrangeiras */
 
     @ManyToOne
@@ -51,13 +59,15 @@ public class MovimentacaoEstoque {
     public MovimentacaoEstoque() {
     }
 
-    public MovimentacaoEstoque(Long movEstId, LocalDate movEstData, String movEstTipo, Float movEstQtd, Movimentacao movEstMovimentacao, Produto movEstProduto) {
-        this.movEstId = movEstId;
-        this.movEstData = movEstData;
-        this.movEstTipo = movEstTipo;
-        this.movEstQtd = movEstQtd;
-        this.movEstMovimentacao = movEstMovimentacao.getReferencia();
+    public MovimentacaoEstoque(Produto movEstProduto, Movimentacao movEstMovimentacao, Float movEstQtdPosterior, Float movEstQtdAnterior, Float movEstQtd, String movEstTipo, LocalDate movEstData, Long movEstId) {
         this.movEstProduto = movEstProduto;
+        this.movEstMovimentacao = movEstMovimentacao;
+        this.movEstQtdPosterior = movEstQtdPosterior;
+        this.movEstQtdAnterior = movEstQtdAnterior;
+        this.movEstQtd = movEstQtd;
+        this.movEstTipo = movEstTipo;
+        this.movEstData = movEstData;
+        this.movEstId = movEstId;
     }
 
     public Long getMovEstId() {
@@ -106,6 +116,22 @@ public class MovimentacaoEstoque {
 
     public void setMovEstProduto(Produto movEstProduto) {
         this.movEstProduto = movEstProduto;
+    }
+
+    public Float getMovEstQtdPosterior() {
+        return movEstQtdPosterior;
+    }
+
+    public void setMovEstQtdPosterior(Float movEstQtdPosterior) {
+        this.movEstQtdPosterior = movEstQtdPosterior;
+    }
+
+    public Float getMovEstQtdAnterior() {
+        return movEstQtdAnterior;
+    }
+
+    public void setMovEstQtdAnterior(Float movEstQtdAnterior) {
+        this.movEstQtdAnterior = movEstQtdAnterior;
     }
 
     @Override

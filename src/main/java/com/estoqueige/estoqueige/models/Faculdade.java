@@ -28,20 +28,25 @@ public class Faculdade {
     private Long facId;
 
     @Column(name = "facNome", length = 50, nullable = false)
-    @NotBlank
+    @NotBlank(message = "O nome não pode ser nulo nem vazio")
     private String facNome;
+
+    @Column(name = "isAtivo", columnDefinition = "TINYINT(1) DEFAULT 1")
+    private Boolean isAtivo;
 
     /* Anotações das chaves estrangeiras */
     @OneToMany(mappedBy = "facRequisitante")
     @JsonBackReference
     private List<Requisitante> requisitantes = new ArrayList<>(); 
 
+
     public Faculdade() {
     }
 
-    public Faculdade(Long facId, String facNome) {
+    public Faculdade(Long facId, String facNome, Boolean isAtivo) {
         this.facId = facId;
         this.facNome = facNome;
+        this.isAtivo = isAtivo;
     }
 
     public Long getFacId() {
@@ -60,6 +65,18 @@ public class Faculdade {
         this.facNome = facNome;
     }
 
+    public Boolean isIsAtivo() {
+        return this.isAtivo;
+    }
+
+    public Boolean getIsAtivo() {
+        return this.isAtivo;
+    }
+
+    public void setIsAtivo(Boolean isAtivo) {
+        this.isAtivo = isAtivo;
+    }
+
     @Override
     public boolean equals(Object o) {
       return EqualsBuilder.reflectionEquals(this, o);
@@ -67,6 +84,7 @@ public class Faculdade {
 
     @Override
     public int hashCode() {
-        return Objects.hash(facId, facNome);
+        return Objects.hash(facId, facNome, isAtivo);
     }
+  
 }

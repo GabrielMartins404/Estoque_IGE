@@ -31,12 +31,8 @@ public class ProdutoMovimentacao {
     private Produto proMovProduto;
 
     @ManyToOne
-    @JoinColumn(name = "proMovMovimentacao", nullable = true)
+    @JoinColumn(name = "proMovMovimentacao", nullable = false)
     private Movimentacao proMovMovimentacao;
-
-    @ManyToOne
-    @JoinColumn(name = "proMovRequisicao", nullable = true)
-    private Requisicao proMovRequisicao;
 
     public ProdutoMovimentacao() {
     }
@@ -46,13 +42,6 @@ public class ProdutoMovimentacao {
         this.proMovQtdProduto = proMovQtdProduto;
         this.proMovProduto = proMovProduto;
         this.proMovMovimentacao = proMovMovimentacao;
-    }
-
-    public ProdutoMovimentacao(Long proMovId, Float proMovQtdProduto, Produto proMovProduto, Requisicao proMovRequisicao) {
-        this.proMovId = proMovId;
-        this.proMovQtdProduto = proMovQtdProduto;
-        this.proMovProduto = proMovProduto;
-        this.proMovRequisicao = proMovRequisicao;
     }
 
     public Long getProMovId() {

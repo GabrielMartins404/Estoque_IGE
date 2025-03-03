@@ -53,8 +53,8 @@ public class Requisicao {
     @JoinColumn(name = "reqRequisitante", nullable = true)
     private Requisitante reqRequisitante;
 
-    @OneToMany(mappedBy = "proMovRequisicao", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProdutoMovimentacao> proMovRequisicao;
+    @OneToMany(mappedBy = "proReqRequisicao", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProdutoRequisicao> proReqRequisicao;
 
 
     public Requisicao() {
@@ -130,14 +130,6 @@ public class Requisicao {
         this.reqRequisitante = reqRequisitante;
     }
 
-    public List<ProdutoMovimentacao> getProReqRequisicao() {
-        return this.proMovRequisicao;
-    }
-
-    public void setProReqRequisicao(List<ProdutoMovimentacao> proReqRequisicao) {
-        this.proMovRequisicao = proReqRequisicao;
-    }
-
     @Override
     public boolean equals(Object o) {
       return EqualsBuilder.reflectionEquals(this, o);
@@ -145,7 +137,7 @@ public class Requisicao {
 
     @Override
     public int hashCode() {
-        return Objects.hash(reqId, reqData, reqDataCancelamento, reqStatus, isAnonima, reqUsuario, reqRequisitante, proMovRequisicao);
+        return Objects.hash(reqId, reqData, reqDataCancelamento, reqStatus, isAnonima, reqUsuario, reqRequisitante);
     }
     
 }

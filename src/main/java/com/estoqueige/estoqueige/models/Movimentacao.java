@@ -29,10 +29,10 @@ public class Movimentacao {
     private Long movId;
 
     @Column(name = "movData", nullable = false)
+    @NotNull
     private LocalDate movData;
 
     @Column(name = "movDataCancelamento", nullable = true)
-    @NotNull
     private LocalDate movDataCancelamento;
 
     @Column(name = "movStatus", length = 2,nullable = false)
