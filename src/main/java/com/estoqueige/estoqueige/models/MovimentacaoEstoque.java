@@ -16,6 +16,8 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = MovimentacaoEstoque.TABLE_NAME)
 public class MovimentacaoEstoque {
@@ -50,10 +52,12 @@ public class MovimentacaoEstoque {
 
     @ManyToOne
     @JoinColumn(name = "movEstMovimentacao", nullable = false)
+    @JsonBackReference
     private Movimentacao movEstMovimentacao;
 
     @ManyToOne
     @JoinColumn(name = "movEstProduto", nullable = false)
+    //@JsonBackReference
     private Produto movEstProduto;
 
     public MovimentacaoEstoque() {

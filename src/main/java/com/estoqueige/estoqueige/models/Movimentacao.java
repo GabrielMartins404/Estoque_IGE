@@ -18,6 +18,8 @@ import jakarta.validation.constraints.NotNull;
 import java.util.Objects;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Entity
 @Table(name = Movimentacao.TABLE_NAME)
 public class Movimentacao {
@@ -62,6 +64,7 @@ public class Movimentacao {
     a ID da requisição deverá ser passado a movimentação
     */
     @OneToMany(mappedBy = "proMovMovimentacao", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<ProdutoMovimentacao> produtosMov;
 
 

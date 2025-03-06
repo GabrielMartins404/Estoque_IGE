@@ -12,6 +12,8 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = ProdutoMovimentacao.TABLE_NAME)
 public class ProdutoMovimentacao {

@@ -36,7 +36,7 @@ public class Faculdade {
 
     /* Anotações das chaves estrangeiras */
     @OneToMany(mappedBy = "facRequisitante")
-    @JsonBackReference
+    //@JsonBackReference
     private List<Requisitante> requisitantes = new ArrayList<>(); 
 
 

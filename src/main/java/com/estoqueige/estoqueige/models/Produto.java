@@ -64,7 +64,7 @@ public class Produto {
         this.proSipac = proSipac;
         this.proQtd = proQtd;
         this.isAtivo = isAtivo;
-        this.movimentacaoEstoque = movimentacaoEstoque;
+        this.movimentacaoEstoque = new ArrayList<>();
         this.produtoMovimentacoes = new ArrayList<>();
         this.produtoRequisicoes = new ArrayList<>();
     }

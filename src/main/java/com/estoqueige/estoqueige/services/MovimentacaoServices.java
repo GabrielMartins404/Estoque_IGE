@@ -30,7 +30,7 @@ public class MovimentacaoServices {
         return movimentacao;
     }
 
-    public List<Movimentacao> buscarMovimentacoes(){
+    public List<Movimentacao> buscarTodasMovimentacoes(){
         List<Movimentacao> movimentacoes = this.movimentacaoRepository.findAll();
         return movimentacoes;
     }
@@ -43,7 +43,15 @@ public class MovimentacaoServices {
         //Salvar a movimentação no banco de dados
         movimentacao.setMovId(null);
         movimentacao.setMovStatus("F");
-        movimentacaoRepository.save(movimentacao);
+
+        //É preciso fazer o vinculo da movimentação para os ProdutosMovimentações. Desse modo, é preciso fazer o loop abaixo
+        for (ProdutoMovimentacao produtoMovimentacao : movimentacao.getProdutosMov()) {
+            produtoMovimentacao.setProMovMovimentacao(movimentacao);
+        }
+
+        movimentacao = movimentacaoRepository.save(movimentacao);
+
+
         for (ProdutoMovimentacao produtoMovimentacao: movimentacao.getProdutosMov()){
             movimentacaoEstoqueServices.salvarMovimentacaoEstoque(movimentacao.getReferencia(), produtoMovimentacao);
         }
