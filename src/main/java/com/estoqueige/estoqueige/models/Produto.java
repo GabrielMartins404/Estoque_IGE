@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,7 @@ public class Produto {
     private String proSipac;
 
     @Column(name = "proQtd", nullable = false, columnDefinition = "FLOAT DEFAULT 0")
+    @NotNull
     private Float proQtd;
 
     @Column(name = "isAtivo", columnDefinition = "TINYINT(1) DEFAULT 1")
