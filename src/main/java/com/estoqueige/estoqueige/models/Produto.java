@@ -51,18 +51,20 @@ public class Produto {
     private List<ProdutoRequisicao> produtoRequisicoes = new ArrayList<>();
 
     @OneToMany(mappedBy = "movEstProduto")
-    @JsonBackReference
-    private List<MovimentacaoEstoque> produtoEstoque = new ArrayList<>();
+    private List<MovimentacaoEstoque> movimentacaoEstoque = new ArrayList<>();
 
     public Produto() {
     }
 
-    public Produto(Long proId, String proNome, String proSipac, Float proQtd, Boolean isAtivo) {
+    public Produto(Long proId, String proNome, String proSipac, Float proQtd, Boolean isAtivo, List<MovimentacaoEstoque> movimentacaoEstoque) {
         this.proId = proId;
         this.proNome = proNome;
         this.proSipac = proSipac;
         this.proQtd = proQtd;
         this.isAtivo = isAtivo;
+        this.movimentacaoEstoque = movimentacaoEstoque;
+        this.produtoMovimentacoes = new ArrayList<>();
+        this.produtoRequisicoes = new ArrayList<>();
     }
 
     public Long getProId() {
@@ -107,6 +109,14 @@ public class Produto {
 
     public void setIsAtivo(Boolean isAtivo) {
         this.isAtivo = isAtivo;
+    }
+
+    public List<MovimentacaoEstoque> getMovimentacaoEstoque() {
+        return movimentacaoEstoque;
+    }
+
+    public void setMovimentacaoEstoque(List<MovimentacaoEstoque> movimentacaoEstoque) {
+        this.movimentacaoEstoque = movimentacaoEstoque;
     }
 
     @Override
