@@ -1,5 +1,6 @@
 package com.estoqueige.estoqueige.services;
 
+import com.estoqueige.estoqueige.dto.ProdutoMovimentacaoDto;
 import com.estoqueige.estoqueige.models.Produto;
 import com.estoqueige.estoqueige.repositories.ProdutoRepository;
 import org.springframework.beans.BeanUtils;

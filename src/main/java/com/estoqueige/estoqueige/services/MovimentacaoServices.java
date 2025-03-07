@@ -1,6 +1,7 @@
 package com.estoqueige.estoqueige.services;
 
 import com.estoqueige.estoqueige.dto.MovimentacaoDto;
+import com.estoqueige.estoqueige.dto.ProdutoMovimentacaoDto;
 import com.estoqueige.estoqueige.models.Movimentacao;
 import com.estoqueige.estoqueige.models.ProdutoMovimentacao;
 import com.estoqueige.estoqueige.repositories.MovimentacaoRepository;
@@ -25,9 +26,19 @@ public class MovimentacaoServices {
 
 
     /* Método services */
+    public ProdutoMovimentacaoDto gerarProdutoMovimentacaoDto(ProdutoMovimentacao produtoMovimentacao){
+        ProdutoMovimentacaoDto produtoMovimentacaoDto = new ProdutoMovimentacaoDto();
+
+        produtoMovimentacaoDto.setProduto(produtoMovimentacao.getProMovProduto());
+        produtoMovimentacaoDto.setQtdProduto(produtoMovimentacao.getProMovQtdProduto());
+
+        return produtoMovimentacaoDto;
+    }
+
     public MovimentacaoDto gerarMovimentacaoDto(Movimentacao movimentacao){
         MovimentacaoDto movimentacaoDto = new MovimentacaoDto();
 
+        List<ProdutoMovimentacaoDto> produtoMovimentacaoDto = new List<>();
         movimentacaoDto.setMovId(movimentacao.getMovId());
         movimentacaoDto.setMovData(movimentacao.getMovData());
         movimentacaoDto.setMovDataCancelamento(movimentacao.getMovData());
@@ -36,7 +47,7 @@ public class MovimentacaoServices {
         movimentacaoDto.setMovStatus(movimentacao.getMovStatus());
         movimentacaoDto.setMovRequisitante(movimentacao.getMovRequisitante());
         movimentacaoDto.setMovUsuario(movimentacao.getMovUsuario());
-        
+
         
     }
 
