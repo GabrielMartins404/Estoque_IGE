@@ -13,6 +13,8 @@ import java.util.Objects;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = ProdutoMovimentacao.TABLE_NAME)
@@ -30,10 +32,13 @@ public class ProdutoMovimentacao {
     /* Definição das chaves estrangeiras */
     @ManyToOne
     @JoinColumn(name = "proMovProduto", nullable = false)
+    @JsonBackReference // Definição do lado "filho"
     private Produto proMovProduto;
-
+    
     @ManyToOne
     @JoinColumn(name = "proMovMovimentacao", nullable = false)
+    @JsonBackReference // Definição do lado "filho"
+    @JsonIgnore
     private Movimentacao proMovMovimentacao;
 
     public ProdutoMovimentacao() {

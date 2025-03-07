@@ -16,7 +16,7 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = Produto.TABLE_NAME)
@@ -45,14 +45,15 @@ public class Produto {
 
     /* Definição das chaves estrangeiras */
     @OneToMany(mappedBy = "proMovProduto")
-    @JsonBackReference
+    //@JsonManagedReference // Definição do lado "pai"
     private List<ProdutoMovimentacao> produtoMovimentacoes = new ArrayList<>();
 
     @OneToMany(mappedBy = "proReqProduto")
-    @JsonBackReference
+    //@JsonManagedReference // Definição do lado "pai"
     private List<ProdutoRequisicao> produtoRequisicoes = new ArrayList<>();
 
     @OneToMany(mappedBy = "movEstProduto")
+    //@JsonManagedReference // Definição do lado "pai"
     private List<MovimentacaoEstoque> movimentacaoEstoque = new ArrayList<>();
 
     public Produto() {

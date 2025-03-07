@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.estoqueige.estoqueige.dto.MovimentacaoDto;
 import com.estoqueige.estoqueige.models.Movimentacao;
 import com.estoqueige.estoqueige.services.MovimentacaoServices;
 
@@ -27,8 +28,8 @@ public class MovimentacaoController {
     }
 
     @GetMapping("/{idMovimentacao}")
-    public ResponseEntity<Movimentacao> buscarMovimentacaosPorId(@PathVariable Long idMovimentacao) {
-        Movimentacao movimentacao = this.movimentacaoServices.buscarMovimentacaoPorId(idMovimentacao);
+    public ResponseEntity<MovimentacaoDto> buscarMovimentacaosPorId(@PathVariable Long idMovimentacao) {
+        MovimentacaoDto movimentacao = this.movimentacaoServices.buscarMovimentacaoPorId(idMovimentacao);
         return ResponseEntity.ok().body(movimentacao);
     }
 

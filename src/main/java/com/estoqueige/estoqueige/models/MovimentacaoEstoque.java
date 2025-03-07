@@ -17,6 +17,7 @@ import java.util.Objects;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = MovimentacaoEstoque.TABLE_NAME)
@@ -51,21 +52,21 @@ public class MovimentacaoEstoque {
     /* Chaves estrangeiras */
 
     @ManyToOne
-    @JoinColumn(name = "movEstMovimentacao", nullable = false)
-    @JsonBackReference
-    private Movimentacao movEstMovimentacao;
-
-    @ManyToOne
     @JoinColumn(name = "movEstProduto", nullable = false)
-    //@JsonBackReference
+    @JsonBackReference // Definição do lado "filho"
     private Produto movEstProduto;
+    
+    @ManyToOne
+    @JoinColumn(name = "movEstMovimentacao", nullable = false)
+    //@JsonBackReference // Definição do lado "filho"
+    private Movimentacao movEstMovimentacao;
 
     public MovimentacaoEstoque() {
     }
 
-    public MovimentacaoEstoque(Produto movEstProduto, Movimentacao movEstMovimentacao, Float movEstQtdPosterior, Float movEstQtdAnterior, Float movEstQtd, String movEstTipo, LocalDate movEstData, Long movEstId) {
+    public MovimentacaoEstoque(Produto movEstProduto, Float movEstQtdPosterior, Float movEstQtdAnterior, Float movEstQtd, String movEstTipo, LocalDate movEstData, Long movEstId) {
         this.movEstProduto = movEstProduto;
-        this.movEstMovimentacao = movEstMovimentacao;
+        //this.movEstMovimentacao = movEstMovimentacao;
         this.movEstQtdPosterior = movEstQtdPosterior;
         this.movEstQtdAnterior = movEstQtdAnterior;
         this.movEstQtd = movEstQtd;

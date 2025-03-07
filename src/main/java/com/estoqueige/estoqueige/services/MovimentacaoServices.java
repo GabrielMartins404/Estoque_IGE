@@ -1,10 +1,12 @@
 package com.estoqueige.estoqueige.services;
 
+import com.estoqueige.estoqueige.dto.MovimentacaoDto;
 import com.estoqueige.estoqueige.models.Movimentacao;
 import com.estoqueige.estoqueige.models.ProdutoMovimentacao;
 import com.estoqueige.estoqueige.repositories.MovimentacaoRepository;
 import jakarta.transaction.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -21,7 +23,22 @@ public class MovimentacaoServices {
         this.movimentacaoEstoqueServices = movimentacaoEstoqueServices;
     }
 
+
     /* Método services */
+    public MovimentacaoDto gerarMovimentacaoDto(Movimentacao movimentacao){
+        MovimentacaoDto movimentacaoDto = new MovimentacaoDto();
+
+        movimentacaoDto.setMovId(movimentacao.getMovId());
+        movimentacaoDto.setMovData(movimentacao.getMovData());
+        movimentacaoDto.setMovDataCancelamento(movimentacao.getMovData());
+        movimentacaoDto.setMovOrigem(movimentacao.getMovOrigem());
+        movimentacaoDto.setMovTipo(movimentacao.getMovTipo());
+        movimentacaoDto.setMovStatus(movimentacao.getMovStatus());
+        movimentacaoDto.setMovRequisitante(movimentacao.getMovRequisitante());
+        movimentacaoDto.setMovUsuario(movimentacao.getMovUsuario());
+        
+        
+    }
 
     public Movimentacao buscarMovimentacaoPorId(Long id){
         Movimentacao movimentacao = this.movimentacaoRepository.findById(id)
@@ -43,6 +60,7 @@ public class MovimentacaoServices {
         //Salvar a movimentação no banco de dados
         movimentacao.setMovId(null);
         movimentacao.setMovStatus("F");
+        movimentacao.setMovData(LocalDate.now());
 
         //É preciso fazer o vinculo da movimentação para os ProdutosMovimentações. Desse modo, é preciso fazer o loop abaixo
         for (ProdutoMovimentacao produtoMovimentacao : movimentacao.getProdutosMov()) {

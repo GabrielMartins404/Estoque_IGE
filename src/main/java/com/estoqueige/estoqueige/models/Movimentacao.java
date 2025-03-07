@@ -19,9 +19,17 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Entity
 @Table(name = Movimentacao.TABLE_NAME)
+@JsonIdentityInfo(
+  generator = ObjectIdGenerators.PropertyGenerator.class,
+  property = "movId"
+)
 public class Movimentacao {
     public static final String TABLE_NAME = "movimentacao";
 
@@ -64,7 +72,7 @@ public class Movimentacao {
     a ID da requisição deverá ser passado a movimentação
     */
     @OneToMany(mappedBy = "proMovMovimentacao", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonBackReference // Definição do lado "pai"
     private List<ProdutoMovimentacao> produtosMov;
 
 
@@ -93,6 +101,7 @@ public class Movimentacao {
         referencia.setMovTipo(this.movTipo);
         referencia.setMovUsuario(this.movUsuario);
         referencia.setMovRequisitante(this.movRequisitante);
+        referencia.setProdutosMov(null);
         
         return referencia;
     }
