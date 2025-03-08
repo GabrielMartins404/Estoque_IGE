@@ -8,6 +8,7 @@ import com.estoqueige.estoqueige.models.Requisitante;
 import com.estoqueige.estoqueige.models.Usuario;
 import java.util.Objects;
 
+//Essas classe serve unicamente para me auxiliar no retorno ao front
 public class MovimentacaoDto {
     private Long movId;
 
@@ -39,7 +40,7 @@ public class MovimentacaoDto {
         this.movTipo = movTipo;
         this.movUsuario = movUsuario;
         this.movRequisitante = movRequisitante;
-        this.produtosMov = produtosMov;
+        this.produtosMov = null;
     }
 
     public Long getMovId() {

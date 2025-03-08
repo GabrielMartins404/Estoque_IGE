@@ -16,6 +16,7 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -54,6 +55,7 @@ public class Produto {
 
     @OneToMany(mappedBy = "movEstProduto")
     //@JsonManagedReference // Definição do lado "pai"
+    //@JsonIgnore
     private List<MovimentacaoEstoque> movimentacaoEstoque = new ArrayList<>();
 
     public Produto() {

@@ -4,7 +4,7 @@ import com.estoqueige.estoqueige.models.Produto;
 import java.util.Objects;
 
 public class ProdutoMovimentacaoDto {
-    private Produto produto;
+    private ProdutoDto produto;
 
     private Float qtdProduto;
 
@@ -12,16 +12,16 @@ public class ProdutoMovimentacaoDto {
     public ProdutoMovimentacaoDto() {
     }
 
-    public ProdutoMovimentacaoDto(Produto produto, Float qtdProduto) {
+    public ProdutoMovimentacaoDto(ProdutoDto produto, Float qtdProduto) {
         this.produto = produto;
         this.qtdProduto = qtdProduto;
     }
 
-    public Produto getProduto() {
+    public ProdutoDto getProduto() {
         return this.produto;
     }
 
-    public void setProduto(Produto produto) {
+    public void setProduto(ProdutoDto produto) {
         this.produto = produto;
     }
 

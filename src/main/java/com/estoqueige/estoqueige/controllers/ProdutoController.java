@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.estoqueige.estoqueige.dto.ProdutoDto;
 import com.estoqueige.estoqueige.models.Produto;
 import com.estoqueige.estoqueige.services.ProdutoServices;
 
@@ -35,8 +36,8 @@ public class ProdutoController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<Produto>> buscarProdutos() {
-        List<Produto> produtos = this.produtoServices.buscarTodosProdutos();
+    public ResponseEntity<List<ProdutoDto>> buscarProdutos() {
+        List<ProdutoDto> produtos = this.produtoServices.buscarTodosProdutos();
         return ResponseEntity.ok().body(produtos);
     }
 

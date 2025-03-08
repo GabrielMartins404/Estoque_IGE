@@ -8,6 +8,7 @@ import com.estoqueige.estoqueige.repositories.MovimentacaoRepository;
 import jakarta.transaction.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -19,17 +20,25 @@ public class MovimentacaoServices {
 
     private final MovimentacaoEstoqueServices movimentacaoEstoqueServices;
 
-    public MovimentacaoServices(MovimentacaoRepository movimentacaoRepository, MovimentacaoEstoqueServices movimentacaoEstoqueServices) {
+    private final ProdutoServices produtoServices;
+
+    public MovimentacaoServices(MovimentacaoRepository movimentacaoRepository, MovimentacaoEstoqueServices movimentacaoEstoqueServices, ProdutoServices produtoServices) {
         this.movimentacaoRepository = movimentacaoRepository;
         this.movimentacaoEstoqueServices = movimentacaoEstoqueServices;
+        this.produtoServices = produtoServices;
     }
 
 
     /* Método services */
+    //Como ProdutoMovimentacao é uma classe que depende de Movimentacao, esse método é implementado aqui. Mas pode ser alterado mais para frente
     public ProdutoMovimentacaoDto gerarProdutoMovimentacaoDto(ProdutoMovimentacao produtoMovimentacao){
         ProdutoMovimentacaoDto produtoMovimentacaoDto = new ProdutoMovimentacaoDto();
 
-        produtoMovimentacaoDto.setProduto(produtoMovimentacao.getProMovProduto());
+        //Aqui converto o produtoMovimentacao em produtoDto, para simplificar a apresentação das movimentacoes
+        produtoMovimentacaoDto.setProduto(
+            this.produtoServices.gerarProdutoDto(produtoMovimentacao.getProMovProduto()
+        ));
+
         produtoMovimentacaoDto.setQtdProduto(produtoMovimentacao.getProMovQtdProduto());
 
         return produtoMovimentacaoDto;
@@ -38,18 +47,36 @@ public class MovimentacaoServices {
     public MovimentacaoDto gerarMovimentacaoDto(Movimentacao movimentacao){
         MovimentacaoDto movimentacaoDto = new MovimentacaoDto();
 
-        List<ProdutoMovimentacaoDto> produtoMovimentacaoDto = new List<>();
+        List<ProdutoMovimentacaoDto> produtoMovimentacaoDtos = new ArrayList<>();
+        for (ProdutoMovimentacao produtoMovimentacao : movimentacao.getProdutosMov()) {
+            //Aqui, chamo a função acima que insere um array de ProdutoMovimentacao com ProdutoDto
+            produtoMovimentacaoDtos.add(gerarProdutoMovimentacaoDto(produtoMovimentacao));
+        }
+
         movimentacaoDto.setMovId(movimentacao.getMovId());
         movimentacaoDto.setMovData(movimentacao.getMovData());
-        movimentacaoDto.setMovDataCancelamento(movimentacao.getMovData());
+        movimentacaoDto.setMovDataCancelamento(movimentacao.getMovDataCancelamento());
         movimentacaoDto.setMovOrigem(movimentacao.getMovOrigem());
         movimentacaoDto.setMovTipo(movimentacao.getMovTipo());
         movimentacaoDto.setMovStatus(movimentacao.getMovStatus());
         movimentacaoDto.setMovRequisitante(movimentacao.getMovRequisitante());
         movimentacaoDto.setMovUsuario(movimentacao.getMovUsuario());
-
+        movimentacaoDto.setProdutosMov(produtoMovimentacaoDtos);
+        return movimentacaoDto;
         
     }
+
+    //Esse método irá ser usado no frontEnd onde preciso que retorne somente uma movimentacao DTO
+    public MovimentacaoDto retornarMovimentacaoDto(Long id){
+        Movimentacao movimentacao = this.buscarMovimentacaoPorId(id);
+        MovimentacaoDto movimentacaoDto = gerarMovimentacaoDto(movimentacao);
+
+        return movimentacaoDto;
+    }
+
+    // public MovimentacaoSemProdutosDto retornarMovimentacaoSemProdutosDto(Movimentacao movimentacao){
+
+    // }
 
     public Movimentacao buscarMovimentacaoPorId(Long id){
         Movimentacao movimentacao = this.movimentacaoRepository.findById(id)
@@ -58,9 +85,15 @@ public class MovimentacaoServices {
         return movimentacao;
     }
 
-    public List<Movimentacao> buscarTodasMovimentacoes(){
+    public List<MovimentacaoDto> buscarTodasMovimentacoes(){
         List<Movimentacao> movimentacoes = this.movimentacaoRepository.findAll();
-        return movimentacoes;
+        List<MovimentacaoDto> movimentacaoDtos = new ArrayList<>();
+        
+        for (Movimentacao movimentacao : movimentacoes) {
+            movimentacaoDtos.add(gerarMovimentacaoDto(movimentacao));
+        }
+
+        return movimentacaoDtos;
     }
 
     //Método para salvar a movimentação no Banco de Dados
@@ -82,7 +115,7 @@ public class MovimentacaoServices {
 
 
         for (ProdutoMovimentacao produtoMovimentacao: movimentacao.getProdutosMov()){
-            movimentacaoEstoqueServices.salvarMovimentacaoEstoque(movimentacao.getReferencia(), produtoMovimentacao);
+            movimentacaoEstoqueServices.salvarMovimentacaoEstoque(movimentacao, produtoMovimentacao);
         }
     }
 
@@ -94,13 +127,14 @@ public class MovimentacaoServices {
         return this.movimentacaoRepository.save(newMovimentacao);
     }
 
+    @Transactional
     public void cancelarMovimentacao(Movimentacao movimentacao){
 
         movimentacao.setMovStatus("C");
         this.atualizarMovimentacao(movimentacao);
         
         for (ProdutoMovimentacao produtoMovimentacao : movimentacao.getProdutosMov()) {
-            this.movimentacaoEstoqueServices.salvarMovimentacaoEstoque(movimentacao.getReferencia(), produtoMovimentacao);
+            this.movimentacaoEstoqueServices.salvarMovimentacaoEstoque(movimentacao, produtoMovimentacao);
         }
     }
 }

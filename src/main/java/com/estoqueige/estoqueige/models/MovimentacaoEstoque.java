@@ -59,6 +59,7 @@ public class MovimentacaoEstoque {
     @ManyToOne
     @JoinColumn(name = "movEstMovimentacao", nullable = false)
     //@JsonBackReference // Definição do lado "filho"
+    //@JsonIgnore
     private Movimentacao movEstMovimentacao;
 
     public MovimentacaoEstoque() {

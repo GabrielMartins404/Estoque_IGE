@@ -91,21 +91,6 @@ public class Movimentacao {
         this.produtosMov = produtosMov;
     }
 
-    public Movimentacao getReferencia() {
-        Movimentacao referencia = new Movimentacao();
-        referencia.setMovId(this.movId);
-        referencia.setMovData(this.movData);
-        referencia.setMovDataCancelamento(this.movDataCancelamento);
-        referencia.setMovStatus(this.movStatus);
-        referencia.setMovOrigem(this.movOrigem);
-        referencia.setMovTipo(this.movTipo);
-        referencia.setMovUsuario(this.movUsuario);
-        referencia.setMovRequisitante(this.movRequisitante);
-        referencia.setProdutosMov(null);
-        
-        return referencia;
-    }
-
     public Long getMovId() {
         return this.movId;
     }

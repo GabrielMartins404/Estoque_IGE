@@ -29,13 +29,13 @@ public class MovimentacaoController {
 
     @GetMapping("/{idMovimentacao}")
     public ResponseEntity<MovimentacaoDto> buscarMovimentacaosPorId(@PathVariable Long idMovimentacao) {
-        MovimentacaoDto movimentacao = this.movimentacaoServices.buscarMovimentacaoPorId(idMovimentacao);
+        MovimentacaoDto movimentacao = this.movimentacaoServices.retornarMovimentacaoDto(idMovimentacao);
         return ResponseEntity.ok().body(movimentacao);
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<Movimentacao>> buscarMovimentacaos() {
-        List<Movimentacao> movimentacao = this.movimentacaoServices.buscarTodasMovimentacoes();
+    public ResponseEntity<List<MovimentacaoDto>> buscarMovimentacaos() {
+        List<MovimentacaoDto> movimentacao = this.movimentacaoServices.buscarTodasMovimentacoes();
         return ResponseEntity.ok().body(movimentacao);
     }
 
