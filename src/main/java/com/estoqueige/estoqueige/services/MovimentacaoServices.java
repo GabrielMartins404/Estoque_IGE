@@ -4,6 +4,7 @@ import com.estoqueige.estoqueige.dto.MovimentacaoDto;
 import com.estoqueige.estoqueige.dto.ProdutoMovimentacaoDto;
 import com.estoqueige.estoqueige.models.Movimentacao;
 import com.estoqueige.estoqueige.models.ProdutoMovimentacao;
+import com.estoqueige.estoqueige.models.enums.MovStatus;
 import com.estoqueige.estoqueige.repositories.MovimentacaoRepository;
 import jakarta.transaction.Transactional;
 
@@ -103,7 +104,7 @@ public class MovimentacaoServices {
 
         //Salvar a movimentação no banco de dados
         movimentacao.setMovId(null);
-        movimentacao.setMovStatus("F");
+        movimentacao.setMovStatus(MovStatus.FINALIZADO);
         movimentacao.setMovData(LocalDate.now());
 
         //É preciso fazer o vinculo da movimentação para os ProdutosMovimentações. Desse modo, é preciso fazer o loop abaixo
@@ -130,7 +131,7 @@ public class MovimentacaoServices {
     @Transactional
     public void cancelarMovimentacao(Movimentacao movimentacao){
 
-        movimentacao.setMovStatus("C");
+        movimentacao.setMovStatus(MovStatus.CANCELADO);
         this.atualizarMovimentacao(movimentacao);
         
         for (ProdutoMovimentacao produtoMovimentacao : movimentacao.getProdutosMov()) {

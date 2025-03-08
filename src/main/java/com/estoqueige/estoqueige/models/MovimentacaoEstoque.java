@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,6 +18,7 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
+import com.estoqueige.estoqueige.models.enums.MovTipo;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -33,9 +36,9 @@ public class MovimentacaoEstoque {
     @NotNull
     private LocalDate movEstData;
 
-    @Column(name = "movEstTipo", length = 2,nullable = false)
-    @NotBlank
-    private String movEstTipo;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private MovTipo movEstTipo;
 
     @Column(name = "movEstQtd", nullable = false)
     @NotNull
@@ -65,7 +68,7 @@ public class MovimentacaoEstoque {
     public MovimentacaoEstoque() {
     }
 
-    public MovimentacaoEstoque(Produto movEstProduto, Float movEstQtdPosterior, Float movEstQtdAnterior, Float movEstQtd, String movEstTipo, LocalDate movEstData, Long movEstId) {
+    public MovimentacaoEstoque(Produto movEstProduto, Float movEstQtdPosterior, Float movEstQtdAnterior, Float movEstQtd, MovTipo movEstTipo, LocalDate movEstData, Long movEstId) {
         this.movEstProduto = movEstProduto;
         //this.movEstMovimentacao = movEstMovimentacao;
         this.movEstQtdPosterior = movEstQtdPosterior;
@@ -92,11 +95,11 @@ public class MovimentacaoEstoque {
         this.movEstData = movEstData;
     }
 
-    public String getMovEstTipo() {
+    public MovTipo getMovEstTipo() {
         return this.movEstTipo;
     }
 
-    public void setMovEstTipo(String movEstTipo) {
+    public void setMovEstTipo(MovTipo movEstTipo) {
         this.movEstTipo = movEstTipo;
     }
 

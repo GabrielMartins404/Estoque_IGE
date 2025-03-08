@@ -6,6 +6,10 @@ import java.util.List;
 import com.estoqueige.estoqueige.models.ProdutoMovimentacao;
 import com.estoqueige.estoqueige.models.Requisitante;
 import com.estoqueige.estoqueige.models.Usuario;
+import com.estoqueige.estoqueige.models.enums.MovOrigem;
+import com.estoqueige.estoqueige.models.enums.MovStatus;
+import com.estoqueige.estoqueige.models.enums.MovTipo;
+
 import java.util.Objects;
 
 //Essas classe serve unicamente para me auxiliar no retorno ao front
@@ -16,11 +20,12 @@ public class MovimentacaoDto {
 
     private LocalDate movDataCancelamento;
 
-    private String movStatus;
+    private MovStatus movStatus;
 
-    private String movOrigem;
+    private MovOrigem movOrigem;
 
-    private String movTipo;
+
+    private MovTipo movTipo;
 
     private Usuario movUsuario;
 
@@ -31,7 +36,7 @@ public class MovimentacaoDto {
     public MovimentacaoDto() {
     }
 
-    public MovimentacaoDto(Long movId, LocalDate movData, LocalDate movDataCancelamento, String movStatus, String movOrigem, String movTipo, Usuario movUsuario, Requisitante movRequisitante, List<ProdutoMovimentacaoDto> produtosMov) {
+    public MovimentacaoDto(Long movId, LocalDate movData, LocalDate movDataCancelamento, MovStatus movStatus, MovOrigem movOrigem, MovTipo movTipo, Usuario movUsuario, Requisitante movRequisitante, List<ProdutoMovimentacaoDto> produtosMov) {
         this.movId = movId;
         this.movData = movData;
         this.movDataCancelamento = movDataCancelamento;
@@ -67,27 +72,27 @@ public class MovimentacaoDto {
         this.movDataCancelamento = movDataCancelamento;
     }
 
-    public String getMovStatus() {
+    public MovStatus getMovStatus() {
         return this.movStatus;
     }
 
-    public void setMovStatus(String movStatus) {
+    public void setMovStatus(MovStatus movStatus) {
         this.movStatus = movStatus;
     }
 
-    public String getMovOrigem() {
+    public MovOrigem getMovOrigem() {
         return this.movOrigem;
     }
 
-    public void setMovOrigem(String movOrigem) {
+    public void setMovOrigem(MovOrigem movOrigem) {
         this.movOrigem = movOrigem;
     }
 
-    public String getMovTipo() {
+    public MovTipo getMovTipo() {
         return this.movTipo;
     }
 
-    public void setMovTipo(String movTipo) {
+    public void setMovTipo(MovTipo movTipo) {
         this.movTipo = movTipo;
     }
 

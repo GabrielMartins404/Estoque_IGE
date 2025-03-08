@@ -4,11 +4,12 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 import com.estoqueige.estoqueige.models.Movimentacao;
+import com.estoqueige.estoqueige.models.enums.MovTipo;
 
 public class MovEstoqueDto {
     private Long movEstId;
     private LocalDate movEstData;
-    private String movEstTipo;
+    private MovTipo movEstTipo;
     private Float movEstQtd;
     private Float movEstQtdAnterior;
     private Float movEstQtdPosterior;
@@ -18,7 +19,7 @@ public class MovEstoqueDto {
     public MovEstoqueDto() {
     }
 
-    public MovEstoqueDto(Long movEstId, LocalDate movEstData, String movEstTipo, Float movEstQtd, Float movEstQtdAnterior, Float movEstQtdPosterior, Movimentacao movEstMovimentacao) {
+    public MovEstoqueDto(Long movEstId, LocalDate movEstData, MovTipo movEstTipo, Float movEstQtd, Float movEstQtdAnterior, Float movEstQtdPosterior, Movimentacao movEstMovimentacao) {
         this.movEstId = movEstId;
         this.movEstData = movEstData;
         this.movEstTipo = movEstTipo;
@@ -46,11 +47,11 @@ public class MovEstoqueDto {
         this.movEstData = movEstData;
     }
 
-    public String getMovEstTipo() {
+    public MovTipo getMovEstTipo() {
         return this.movEstTipo;
     }
 
-    public void setMovEstTipo(String movEstTipo) {
+    public void setMovEstTipo(MovTipo movEstTipo) {
         this.movEstTipo = movEstTipo;
     }
 

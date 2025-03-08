@@ -6,6 +6,8 @@ import java.util.List;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,6 +21,9 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
+import com.estoqueige.estoqueige.models.enums.MovOrigem;
+import com.estoqueige.estoqueige.models.enums.MovStatus;
+import com.estoqueige.estoqueige.models.enums.MovTipo;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -45,17 +50,18 @@ public class Movimentacao {
     @Column(name = "movDataCancelamento", nullable = true)
     private LocalDate movDataCancelamento;
 
-    @Column(name = "movStatus", length = 2,nullable = false)
-    @NotBlank
-    private String movStatus;
+    //Aqui uso Enums, que estão no pacote de enums
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private MovStatus movStatus;
 
-    @Column(name = "movOrigem", length = 2,nullable = false)
-    @NotBlank
-    private String movOrigem;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private MovTipo movTipo;
 
-    @Column(name = "movTipo", length = 2,nullable = false)
-    @NotBlank
-    private String movTipo;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private MovOrigem movOrigem;
 
     /* Chaves estrangeiras */
 
@@ -79,7 +85,7 @@ public class Movimentacao {
     public Movimentacao() {
     }
 
-    public Movimentacao(Long movId, LocalDate movData, LocalDate movDataCancelamento, String movStatus, String movOrigem, String movTipo, Usuario movUsuario, Requisitante movRequisitante, List<ProdutoMovimentacao> produtosMov) {
+    public Movimentacao(Long movId, LocalDate movData, LocalDate movDataCancelamento, MovStatus movStatus, MovOrigem movOrigem, MovTipo movTipo, Usuario movUsuario, Requisitante movRequisitante, List<ProdutoMovimentacao> produtosMov) {
         this.movId = movId;
         this.movData = movData;
         this.movDataCancelamento = movDataCancelamento;
@@ -115,27 +121,27 @@ public class Movimentacao {
         this.movDataCancelamento = movDataCancelamento;
     }
 
-    public String getMovStatus() {
+    public MovStatus getMovStatus() {
         return this.movStatus;
     }
 
-    public void setMovStatus(String movStatus) {
+    public void setMovStatus(MovStatus movStatus) {
         this.movStatus = movStatus;
     }
 
-    public String getMovOrigem() {
+    public MovOrigem getMovOrigem() {
         return this.movOrigem;
     }
 
-    public void setMovOrigem(String movOrigem) {
+    public void setMovOrigem(MovOrigem movOrigem) {
         this.movOrigem = movOrigem;
     }
 
-    public String getMovTipo() {
+    public MovTipo getMovTipo() {
         return this.movTipo;
     }
 
-    public void setMovTipo(String movTipo) {
+    public void setMovTipo(MovTipo movTipo) {
         this.movTipo = movTipo;
     }
 
