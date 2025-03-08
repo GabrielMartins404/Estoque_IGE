@@ -9,6 +9,7 @@ import com.estoqueige.estoqueige.repositories.MovimentacaoRepository;
 import jakarta.transaction.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +57,9 @@ public class MovimentacaoServices {
 
         movimentacaoDto.setMovId(movimentacao.getMovId());
         movimentacaoDto.setMovData(movimentacao.getMovData());
+        movimentacaoDto.setMovHorario(movimentacao.getMovHorario());
         movimentacaoDto.setMovDataCancelamento(movimentacao.getMovDataCancelamento());
+        movimentacaoDto.setMorarioCancelamento(movimentacao.getMovHorarioCancelamento());
         movimentacaoDto.setMovOrigem(movimentacao.getMovOrigem());
         movimentacaoDto.setMovTipo(movimentacao.getMovTipo());
         movimentacaoDto.setMovStatus(movimentacao.getMovStatus());
@@ -106,6 +109,7 @@ public class MovimentacaoServices {
         movimentacao.setMovId(null);
         movimentacao.setMovStatus(MovStatus.FINALIZADO);
         movimentacao.setMovData(LocalDate.now());
+        movimentacao.setMovHorario(LocalTime.now());
 
         //É preciso fazer o vinculo da movimentação para os ProdutosMovimentações. Desse modo, é preciso fazer o loop abaixo
         for (ProdutoMovimentacao produtoMovimentacao : movimentacao.getProdutosMov()) {

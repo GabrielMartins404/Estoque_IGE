@@ -1,6 +1,7 @@
 package com.estoqueige.estoqueige.models;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,6 +37,10 @@ public class MovimentacaoEstoque {
     @NotNull
     private LocalDate movEstData;
 
+    @Column(name = "movDataHorario", nullable = false)
+    @NotNull
+    private LocalTime movEstHorario;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MovTipo movEstTipo;
@@ -68,7 +73,7 @@ public class MovimentacaoEstoque {
     public MovimentacaoEstoque() {
     }
 
-    public MovimentacaoEstoque(Produto movEstProduto, Float movEstQtdPosterior, Float movEstQtdAnterior, Float movEstQtd, MovTipo movEstTipo, LocalDate movEstData, Long movEstId) {
+    public MovimentacaoEstoque(Produto movEstProduto, Float movEstQtdPosterior, Float movEstQtdAnterior, Float movEstQtd, MovTipo movEstTipo, LocalDate movEstData, LocalTime movEstHorario, Long movEstId) {
         this.movEstProduto = movEstProduto;
         //this.movEstMovimentacao = movEstMovimentacao;
         this.movEstQtdPosterior = movEstQtdPosterior;
@@ -76,6 +81,7 @@ public class MovimentacaoEstoque {
         this.movEstQtd = movEstQtd;
         this.movEstTipo = movEstTipo;
         this.movEstData = movEstData;
+        this.movEstHorario = movEstHorario;
         this.movEstId = movEstId;
     }
 
@@ -93,6 +99,14 @@ public class MovimentacaoEstoque {
 
     public void setMovEstData(LocalDate movEstData) {
         this.movEstData = movEstData;
+    }
+
+    public LocalTime getMovEstHorario() {
+        return this.movEstHorario;
+    }
+
+    public void setMovEstHorario(LocalTime movEstHorario) {
+        this.movEstHorario = movEstHorario;
     }
 
     public MovTipo getMovEstTipo() {

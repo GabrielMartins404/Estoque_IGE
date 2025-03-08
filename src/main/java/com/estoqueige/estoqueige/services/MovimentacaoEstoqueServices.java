@@ -12,6 +12,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Service
 public class MovimentacaoEstoqueServices {
@@ -48,6 +49,7 @@ public class MovimentacaoEstoqueServices {
         MovimentacaoEstoque movimentacaoEstoque = new MovimentacaoEstoque();
 
         movimentacaoEstoque.setMovEstData(LocalDate.now());
+        movimentacaoEstoque.setMovEstHorario(LocalTime.now());
         movimentacaoEstoque.setMovEstQtd(produtoMovimentacao.getProMovQtdProduto());
         movimentacaoEstoque.setMovEstTipo(movimentacao.getMovTipo());
         movimentacaoEstoque.setMovEstMovimentacao(movimentacao);

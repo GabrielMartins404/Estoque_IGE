@@ -1,6 +1,7 @@
 package com.estoqueige.estoqueige.models;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -47,8 +48,15 @@ public class Movimentacao {
     @NotNull
     private LocalDate movData;
 
+    @Column(name = "movDataHorario", nullable = false)
+    @NotNull
+    private LocalTime movHorario;
+
     @Column(name = "movDataCancelamento", nullable = true)
     private LocalDate movDataCancelamento;
+
+    @Column(name = "movHorarioCancelamento", nullable = true)
+    private LocalTime movHorarioCancelamento;
 
     //Aqui uso Enums, que estão no pacote de enums
     @Enumerated(EnumType.STRING)
@@ -113,12 +121,28 @@ public class Movimentacao {
         this.movData = movData;
     }
 
+    public LocalTime getMovHorario() {
+        return this.movHorario;
+    }
+
+    public void setMovHorario(LocalTime movHorario) {
+        this.movHorario = movHorario;
+    }
+
     public LocalDate getMovDataCancelamento() {
         return this.movDataCancelamento;
     }
 
     public void setMovDataCancelamento(LocalDate movDataCancelamento) {
         this.movDataCancelamento = movDataCancelamento;
+    }
+
+    public LocalTime getMovHorarioCancelamento() {
+        return this.movHorarioCancelamento;
+    }
+
+    public void setMorarioCancelamento(LocalTime movHorarioCancelamento) {
+        this.movHorarioCancelamento = movHorarioCancelamento;
     }
 
     public MovStatus getMovStatus() {

@@ -1,6 +1,7 @@
 package com.estoqueige.estoqueige.dto;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import com.estoqueige.estoqueige.models.ProdutoMovimentacao;
@@ -20,10 +21,13 @@ public class MovimentacaoDto {
 
     private LocalDate movDataCancelamento;
 
+    private LocalTime movHorario;
+
+    private LocalTime movHorarioCancelamento;
+
     private MovStatus movStatus;
 
     private MovOrigem movOrigem;
-
 
     private MovTipo movTipo;
 
@@ -64,8 +68,24 @@ public class MovimentacaoDto {
         this.movData = movData;
     }
 
+    public LocalTime getMovHorario() {
+        return this.movHorario;
+    }
+
+    public void setMovHorario(LocalTime movHorario) {
+        this.movHorario = movHorario;
+    }
+
     public LocalDate getMovDataCancelamento() {
         return this.movDataCancelamento;
+    }
+
+    public LocalTime getMovHorarioCancelamento() {
+        return this.movHorarioCancelamento;
+    }
+
+    public void setMorarioCancelamento(LocalTime movHorarioCancelamento) {
+        this.movHorarioCancelamento = movHorarioCancelamento;
     }
 
     public void setMovDataCancelamento(LocalDate movDataCancelamento) {
