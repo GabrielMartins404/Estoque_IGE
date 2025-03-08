@@ -19,6 +19,7 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
+import com.estoqueige.estoqueige.models.enums.MovStatus;
 import com.estoqueige.estoqueige.models.enums.MovTipo;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -44,6 +45,10 @@ public class MovimentacaoEstoque {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MovTipo movEstTipo;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private MovStatus movEstStatus;
 
     @Column(name = "movEstQtd", nullable = false)
     @NotNull
@@ -73,17 +78,19 @@ public class MovimentacaoEstoque {
     public MovimentacaoEstoque() {
     }
 
-    public MovimentacaoEstoque(Produto movEstProduto, Float movEstQtdPosterior, Float movEstQtdAnterior, Float movEstQtd, MovTipo movEstTipo, LocalDate movEstData, LocalTime movEstHorario, Long movEstId) {
-        this.movEstProduto = movEstProduto;
-        //this.movEstMovimentacao = movEstMovimentacao;
-        this.movEstQtdPosterior = movEstQtdPosterior;
-        this.movEstQtdAnterior = movEstQtdAnterior;
-        this.movEstQtd = movEstQtd;
-        this.movEstTipo = movEstTipo;
+    public MovimentacaoEstoque(Long movEstId, LocalDate movEstData, LocalTime movEstHorario, MovTipo movEstTipo, MovStatus movEstStatus, Float movEstQtd, Float movEstQtdAnterior, Float movEstQtdPosterior, Produto movEstProduto, Movimentacao movEstMovimentacao) {
+        this.movEstId = movEstId;
         this.movEstData = movEstData;
         this.movEstHorario = movEstHorario;
-        this.movEstId = movEstId;
+        this.movEstTipo = movEstTipo;
+        this.movEstStatus = movEstStatus;
+        this.movEstQtd = movEstQtd;
+        this.movEstQtdAnterior = movEstQtdAnterior;
+        this.movEstQtdPosterior = movEstQtdPosterior;
+        this.movEstProduto = movEstProduto;
+        //this.movEstMovimentacao = movEstMovimentacao;
     }
+
 
     public Long getMovEstId() {
         return this.movEstId;
@@ -116,6 +123,15 @@ public class MovimentacaoEstoque {
     public void setMovEstTipo(MovTipo movEstTipo) {
         this.movEstTipo = movEstTipo;
     }
+
+    public MovStatus getMovEstStatus() {
+        return this.movEstStatus;
+    }
+
+    public void setMovEstStatus(MovStatus movEstStatus) {
+        this.movEstStatus = movEstStatus;
+    }
+
 
     public Float getMovEstQtd() {
         return this.movEstQtd;

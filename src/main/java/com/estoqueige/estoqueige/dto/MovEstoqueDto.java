@@ -4,12 +4,14 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 import com.estoqueige.estoqueige.models.Movimentacao;
+import com.estoqueige.estoqueige.models.enums.MovStatus;
 import com.estoqueige.estoqueige.models.enums.MovTipo;
 
 public class MovEstoqueDto {
     private Long movEstId;
     private LocalDate movEstData;
     private MovTipo movEstTipo;
+    private MovStatus movEstStatus;
     private Float movEstQtd;
     private Float movEstQtdAnterior;
     private Float movEstQtdPosterior;
@@ -19,10 +21,11 @@ public class MovEstoqueDto {
     public MovEstoqueDto() {
     }
 
-    public MovEstoqueDto(Long movEstId, LocalDate movEstData, MovTipo movEstTipo, Float movEstQtd, Float movEstQtdAnterior, Float movEstQtdPosterior, Movimentacao movEstMovimentacao) {
+    public MovEstoqueDto(Long movEstId, LocalDate movEstData, MovTipo movEstTipo, MovStatus movEstStatus, Float movEstQtd, Float movEstQtdAnterior, Float movEstQtdPosterior, Movimentacao movEstMovimentacao) {
         this.movEstId = movEstId;
         this.movEstData = movEstData;
         this.movEstTipo = movEstTipo;
+        this.movEstStatus = movEstStatus;
         this.movEstQtd = movEstQtd;
         this.movEstQtdAnterior = movEstQtdAnterior;
         this.movEstQtdPosterior = movEstQtdPosterior;
@@ -55,6 +58,15 @@ public class MovEstoqueDto {
         this.movEstTipo = movEstTipo;
     }
 
+    public MovStatus getMovEstStatus() {
+        return this.movEstStatus;
+    }
+
+    public void setMovEstStatus(MovStatus movEstStatus) {
+        this.movEstStatus = movEstStatus;
+    }
+
+
     public Float getMovEstQtd() {
         return this.movEstQtd;
     }
@@ -86,19 +98,5 @@ public class MovEstoqueDto {
     public void setMovEstMovimentacao(Movimentacao movEstMovimentacao) {
         this.movEstMovimentacao = movEstMovimentacao;
     }
-    
-    @Override
-    public String toString() {
-        return "{" +
-            " movEstId='" + getMovEstId() + "'" +
-            ", movEstData='" + getMovEstData() + "'" +
-            ", movEstTipo='" + getMovEstTipo() + "'" +
-            ", movEstQtd='" + getMovEstQtd() + "'" +
-            ", movEstQtdAnterior='" + getMovEstQtdAnterior() + "'" +
-            ", movEstQtdPosterior='" + getMovEstQtdPosterior() + "'" +
-            ", movEstMovimentacao='" + getMovEstMovimentacao() + "'" +
-            "}";
-    }
-    
-    
+
 }

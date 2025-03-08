@@ -1,6 +1,5 @@
 package com.estoqueige.estoqueige.services;
 
-import com.estoqueige.estoqueige.dto.MovEstoqueDto;
 import com.estoqueige.estoqueige.models.Movimentacao;
 import com.estoqueige.estoqueige.models.MovimentacaoEstoque;
 import com.estoqueige.estoqueige.models.Produto;
@@ -34,7 +33,7 @@ public class MovimentacaoEstoqueServices {
             qtdPosterior = qtdAtual + qtdMovimentada;
         }else if(movimentacao.getMovTipo() == MovTipo.SAIDA && movimentacao.getMovStatus()== MovStatus.FINALIZADO){
             qtdPosterior = qtdAtual - qtdMovimentada;
-        }else if(movimentacao.getMovStatus()== MovStatus.CANCELADO){
+        }else if(movimentacao.getMovStatus() == MovStatus.CANCELADO){
             if(movimentacao.getMovTipo() == MovTipo.ENTRADA){
                 qtdPosterior = qtdAtual - qtdMovimentada;
             }else{
@@ -52,6 +51,7 @@ public class MovimentacaoEstoqueServices {
         movimentacaoEstoque.setMovEstHorario(LocalTime.now());
         movimentacaoEstoque.setMovEstQtd(produtoMovimentacao.getProMovQtdProduto());
         movimentacaoEstoque.setMovEstTipo(movimentacao.getMovTipo());
+        movimentacaoEstoque.setMovEstStatus(MovStatus.FINALIZADO);
         movimentacaoEstoque.setMovEstMovimentacao(movimentacao);
         movimentacaoEstoque.setMovEstProduto(produtoMovimentacao.getProMovProduto());
 
@@ -62,10 +62,16 @@ public class MovimentacaoEstoqueServices {
 
         produto.setProQtd(qtdPosterior);
         movimentacaoEstoque.setMovEstQtdPosterior(qtdPosterior);
-        //Status F: Finalizado, Status C: Cancelado
-        //MovTipo E: Entrada, MovTipo S: Saída
-        
+
         if(movimentacao.getMovStatus() == MovStatus.FINALIZADO || movimentacao.getMovStatus() == MovStatus.CANCELADO){
+            if(movimentacao.getMovStatus() == MovStatus.CANCELADO){
+                movimentacaoEstoque.setMovEstStatus(MovStatus.CANCELADO);
+                if(movimentacao.getMovTipo() == MovTipo.ENTRADA){
+                    movimentacaoEstoque.setMovEstTipo(MovTipo.SAIDA);
+                }else{
+                    movimentacaoEstoque.setMovEstTipo(MovTipo.ENTRADA);
+                }
+            }
             this.produtoServices.atualizarProduto(produto);
         }else{
             throw new RuntimeException("Tipo de movimentação inválido. Deve ser 'E' (entrada) ou 'S' (saída).");

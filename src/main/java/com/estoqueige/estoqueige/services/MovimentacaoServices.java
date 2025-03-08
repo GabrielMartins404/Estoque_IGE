@@ -78,10 +78,6 @@ public class MovimentacaoServices {
         return movimentacaoDto;
     }
 
-    // public MovimentacaoSemProdutosDto retornarMovimentacaoSemProdutosDto(Movimentacao movimentacao){
-
-    // }
-
     public Movimentacao buscarMovimentacaoPorId(Long id){
         Movimentacao movimentacao = this.movimentacaoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Falha ao buscar Movimentacao"));
@@ -133,8 +129,11 @@ public class MovimentacaoServices {
     }
 
     @Transactional
-    public void cancelarMovimentacao(Movimentacao movimentacao){
-
+    public void cancelarMovimentacao(Long idMovimentacao){
+        //Adicionar validações
+        Movimentacao movimentacao = this.buscarMovimentacaoPorId(idMovimentacao);
+        movimentacao.setMovDataCancelamento(LocalDate.now());
+        movimentacao.setMovHorarioCancelamento(LocalTime.now());
         movimentacao.setMovStatus(MovStatus.CANCELADO);
         this.atualizarMovimentacao(movimentacao);
         

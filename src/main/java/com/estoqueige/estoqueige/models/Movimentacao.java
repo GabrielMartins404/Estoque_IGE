@@ -141,7 +141,7 @@ public class Movimentacao {
         return this.movHorarioCancelamento;
     }
 
-    public void setMorarioCancelamento(LocalTime movHorarioCancelamento) {
+    public void setMovHorarioCancelamento(LocalTime movHorarioCancelamento) {
         this.movHorarioCancelamento = movHorarioCancelamento;
     }
 
