@@ -52,5 +52,11 @@ public class FaculdadeController {
         faculdade.setFacId(idFaculdade);
         return ResponseEntity.ok(this.faculdadeServices.atualizarFaculdade(faculdade));
     }
+
+    @PutMapping("/inativar/{idFaculdade}")
+    public ResponseEntity<Void> inativarFaculdade(@PathVariable Long idFaculdade){
+        this.faculdadeServices.alterarStatusAtivoFaculdade(idFaculdade);
+        return ResponseEntity.noContent().build();
+    }
     
 }

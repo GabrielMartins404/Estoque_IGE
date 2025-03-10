@@ -49,7 +49,7 @@ public class ProdutoServices {
             produto.getProNome(),
             produto.getProSipac(),
             produto.getProQtd(),
-            produto.isIsAtivo()
+            produto.getIsAtivo()
         );
 
         return produtoDto;

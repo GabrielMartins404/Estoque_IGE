@@ -8,16 +8,22 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.util.Objects;
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = ProdutoMovimentacao.TABLE_NAME)
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode
 public class ProdutoMovimentacao {
     public static final String TABLE_NAME = "produtoMovimentacao";
 
@@ -40,57 +46,5 @@ public class ProdutoMovimentacao {
     @JsonBackReference // Definição do lado "filho"
     @JsonIgnore
     private Movimentacao proMovMovimentacao;
-
-    public ProdutoMovimentacao() {
-    }
-    
-    public ProdutoMovimentacao(Long proMovId, Float proMovQtdProduto, Produto proMovProduto, Movimentacao proMovMovimentacao) {
-        this.proMovId = proMovId;
-        this.proMovQtdProduto = proMovQtdProduto;
-        this.proMovProduto = proMovProduto;
-        this.proMovMovimentacao = proMovMovimentacao;
-    }
-
-    public Long getProMovId() {
-        return this.proMovId;
-    }
-
-    public void setProMovId(Long proMovId) {
-        this.proMovId = proMovId;
-    }
-
-    public Float getProMovQtdProduto() {
-        return this.proMovQtdProduto;
-    }
-
-    public void setProMovQtdProduto(Float proMovQtdProduto) {
-        this.proMovQtdProduto = proMovQtdProduto;
-    }
-
-    public Produto getProMovProduto() {
-        return this.proMovProduto;
-    }
-
-    public void setProMovProduto(Produto proMovProduto) {
-        this.proMovProduto = proMovProduto;
-    }
-
-    public Movimentacao getProMovMovimentacao() {
-        return this.proMovMovimentacao;
-    }
-
-    public void setProMovMovimentacao(Movimentacao proMovMovimentacao) {
-        this.proMovMovimentacao = proMovMovimentacao;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      return EqualsBuilder.reflectionEquals(this, o);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(proMovId, proMovQtdProduto, proMovProduto);
-    }
 
 }

@@ -8,12 +8,19 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import java.util.Objects;
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = Usuario.TABLE_NAME)
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode
 public class Usuario {
     public static final String TABLE_NAME = "usuario";
 
@@ -41,84 +48,4 @@ public class Usuario {
     @Column(name = "isAdmin", columnDefinition = "TINYINT(1) DEFAULT 0")
     @NotNull
     private Boolean isAdmin;
-
-
-    public Usuario() {
-    }
-
-    public Usuario(Long usuId, String usuNome, String usuLogin, String usuSenha, Boolean isAtivo, Boolean isAdmin) {
-        this.usuId = usuId;
-        this.usuNome = usuNome;
-        this.usuLogin = usuLogin;
-        this.usuSenha = usuSenha;
-        this.isAtivo = isAtivo;
-        this.isAdmin = isAdmin;
-    }
-
-    public Long getUsuId() {
-        return this.usuId;
-    }
-
-    public void setUsuId(Long usuId) {
-        this.usuId = usuId;
-    }
-
-    public String getUsuNome() {
-        return this.usuNome;
-    }
-
-    public void setUsuNome(String usuNome) {
-        this.usuNome = usuNome;
-    }
-
-    public String getUsuLogin() {
-        return this.usuLogin;
-    }
-
-    public void setUsuLogin(String usuLogin) {
-        this.usuLogin = usuLogin;
-    }
-
-    public String getUsuSenha() {
-        return this.usuSenha;
-    }
-
-    public void setUsuSenha(String usuSenha) {
-        this.usuSenha = usuSenha;
-    }
-
-    public Boolean isIsAtivo() {
-        return this.isAtivo;
-    }
-
-    public Boolean getIsAtivo() {
-        return this.isAtivo;
-    }
-
-    public void setIsAtivo(Boolean isAtivo) {
-        this.isAtivo = isAtivo;
-    }
-
-    public Boolean isIsAdmin() {
-        return this.isAdmin;
-    }
-
-    public Boolean getIsAdmin() {
-        return this.isAdmin;
-    }
-
-    public void setIsAdmin(Boolean isAdmin) {
-        this.isAdmin = isAdmin;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      return EqualsBuilder.reflectionEquals(this, o);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(usuId, usuNome, usuLogin, usuSenha, isAtivo, isAdmin);
-    }
-
 }

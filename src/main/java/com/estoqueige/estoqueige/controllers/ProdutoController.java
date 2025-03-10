@@ -57,4 +57,10 @@ public class ProdutoController {
         produto.setProId(idProduto);
         return ResponseEntity.ok(this.produtoServices.atualizarProduto(produto));
     }
+
+    @PutMapping("/inativar/{idProduto}")
+    public ResponseEntity<Void> inativarProduto(@PathVariable Long idProduto){
+        this.produtoServices.alterarStatusAtivoProduto(idProduto);
+        return ResponseEntity.noContent().build();
+    }
 }

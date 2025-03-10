@@ -54,4 +54,9 @@ public class UsuarioController {
         return ResponseEntity.ok(this.usuarioServices.atualizarUsuario(usuario));
     }
 
+    @PutMapping("/inativar/{idUsuario}")
+    public ResponseEntity<Void> inativarUsuario(@PathVariable Long idUsuario){
+        this.usuarioServices.alterarStatusAtivoUsuario(idUsuario);
+        return ResponseEntity.noContent().build();
+    }
 }

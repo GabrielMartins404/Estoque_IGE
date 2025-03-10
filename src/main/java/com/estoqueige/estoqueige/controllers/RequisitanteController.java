@@ -54,5 +54,11 @@ public class RequisitanteController {
         requisitante.setReqId(idRequisitante);
         return ResponseEntity.ok(this.requisitanteServices.atualizarRequisitante(requisitante));
     }
+
+    @PutMapping("/inativar/{idRequisitante}")
+    public ResponseEntity<Void> inativarRequisitante(@PathVariable Long idRequisitante){
+        this.requisitanteServices.alterarStatusAtivoRequisitante(idRequisitante);
+        return ResponseEntity.noContent().build();
+    }
     
 }

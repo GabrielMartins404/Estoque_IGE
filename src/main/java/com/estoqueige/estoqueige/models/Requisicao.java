@@ -15,12 +15,20 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
 
 @Entity
 @Table(name = Requisicao.TABLE_NAME)
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode
 public class Requisicao {
     public static final String TABLE_NAME = "requisicao";
 
@@ -56,88 +64,4 @@ public class Requisicao {
     @OneToMany(mappedBy = "proReqRequisicao", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProdutoRequisicao> proReqRequisicao;
 
-
-    public Requisicao() {
-    }
-
-    public Requisicao(Long reqId, LocalDate reqData, LocalDate reqDataCancelamento, String reqStatus, Boolean isAnonima, Usuario reqUsuario, Requisitante reqRequisitante) {
-        this.reqId = reqId;
-        this.reqData = reqData;
-        this.reqDataCancelamento = reqDataCancelamento;
-        this.reqStatus = reqStatus;
-        this.isAnonima = isAnonima;
-        this.reqUsuario = reqUsuario;
-        this.reqRequisitante = reqRequisitante;
-    }
-
-    public Long getReqId() {
-        return this.reqId;
-    }
-
-    public void setReqId(Long reqId) {
-        this.reqId = reqId;
-    }
-
-    public LocalDate getReqData() {
-        return this.reqData;
-    }
-
-    public void setReqData(LocalDate reqData) {
-        this.reqData = reqData;
-    }
-
-    public LocalDate getReqDataCancelamento() {
-        return this.reqDataCancelamento;
-    }
-
-    public void setReqDataCancelamento(LocalDate reqDataCancelamento) {
-        this.reqDataCancelamento = reqDataCancelamento;
-    }
-
-    public String getReqStatus() {
-        return this.reqStatus;
-    }
-
-    public void setReqStatus(String reqStatus) {
-        this.reqStatus = reqStatus;
-    }
-
-    public Boolean isIsAnonima() {
-        return this.isAnonima;
-    }
-
-    public Boolean getIsAnonima() {
-        return this.isAnonima;
-    }
-
-    public void setIsAnonima(Boolean isAnonima) {
-        this.isAnonima = isAnonima;
-    }
-
-    public Usuario getReqUsuario() {
-        return this.reqUsuario;
-    }
-
-    public void setReqUsuario(Usuario reqUsuario) {
-        this.reqUsuario = reqUsuario;
-    }
-
-    public Requisitante getReqRequisitante() {
-        return this.reqRequisitante;
-    }
-
-    public void setReqRequisitante(Requisitante reqRequisitante) {
-        this.reqRequisitante = reqRequisitante;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      return EqualsBuilder.reflectionEquals(this, o);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(reqId, reqData, reqDataCancelamento, reqStatus, isAnonima, reqUsuario, reqRequisitante);
-    }
-    
 }

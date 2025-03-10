@@ -50,7 +50,7 @@ public class RequisitanteServices {
         Requisitante requisitante = this.requisitanteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Requisitante não encontrado com o ID: " + id));
 
-        requisitante.setIsAtivo(!requisitante.isAtivo());
+        requisitante.setIsAtivo(!requisitante.getIsAtivo());
         return this.requisitanteRepository.save(requisitante);
     }
 }

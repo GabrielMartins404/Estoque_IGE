@@ -49,8 +49,7 @@ public class UsuarioServices {
 
     @Transactional
     public Usuario alterarStatusAtivoUsuario(Long id) {
-        Usuario usuario = this.usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario não encontrado com o ID: " + id));
+        Usuario usuario = this.buscarUsuarioPorId(id);
 
         usuario.setIsAtivo(!usuario.getIsAtivo());
         return this.usuarioRepository.save(usuario);
