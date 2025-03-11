@@ -2,6 +2,8 @@ package com.estoqueige.estoqueige.services;
 
 import com.estoqueige.estoqueige.models.Usuario;
 import com.estoqueige.estoqueige.repositories.UsuarioRepository;
+import com.estoqueige.estoqueige.services.exceptions.ErroAoBuscarObjetos;
+
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,7 @@ public class UsuarioServices {
     /* Método services */
     public Usuario buscarUsuarioPorId(Long id) {
         Optional<Usuario> usuario = this.usuarioRepository.findById(id);
-        return usuario.orElseThrow(() -> new RuntimeException("Não foi possivel encontrar o usuario"));
+        return usuario.orElseThrow(() -> new ErroAoBuscarObjetos("Não foi possivel encontrar o usuario de id: "+id));
     }
 
     public List<Usuario> buscarTodosUsuarios() {

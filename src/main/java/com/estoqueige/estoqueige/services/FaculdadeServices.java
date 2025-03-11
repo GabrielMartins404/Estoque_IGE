@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.estoqueige.estoqueige.models.Faculdade;
 import com.estoqueige.estoqueige.repositories.FaculdadeRepository;
+import com.estoqueige.estoqueige.services.exceptions.ErroAoBuscarObjetos;
 
 @Service
 public class FaculdadeServices {
@@ -22,7 +23,7 @@ public class FaculdadeServices {
 
     public Faculdade buscarFaculdadePorId(Long id){
         Optional<Faculdade> faculdade = this.faculdadeRepository.findById(id);
-        return faculdade.orElseThrow(() -> new RuntimeException("Falha ao buscar faculdade por ID"));
+        return faculdade.orElseThrow(() -> new ErroAoBuscarObjetos("Falha ao buscar faculdade por ID: "+ id));
     }
 
     public List<Faculdade> buscarTodasFaculdades(){

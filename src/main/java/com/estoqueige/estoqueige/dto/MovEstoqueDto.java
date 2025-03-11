@@ -7,6 +7,11 @@ import com.estoqueige.estoqueige.models.Movimentacao;
 import com.estoqueige.estoqueige.models.enums.MovStatus;
 import com.estoqueige.estoqueige.models.enums.MovTipo;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class MovEstoqueDto {
     private Long movEstId;
     private LocalDate movEstData;
@@ -33,70 +38,4 @@ public class MovEstoqueDto {
         movimentacao.setProdutosMov(null);
         this.movEstMovimentacao = movimentacao;
     }
-
-    public Long getMovEstId() {
-        return this.movEstId;
-    }
-
-    public void setMovEstId(Long movEstId) {
-        this.movEstId = movEstId;
-    }
-
-    public LocalDate getMovEstData() {
-        return this.movEstData;
-    }
-
-    public void setMovEstData(LocalDate movEstData) {
-        this.movEstData = movEstData;
-    }
-
-    public MovTipo getMovEstTipo() {
-        return this.movEstTipo;
-    }
-
-    public void setMovEstTipo(MovTipo movEstTipo) {
-        this.movEstTipo = movEstTipo;
-    }
-
-    public MovStatus getMovEstStatus() {
-        return this.movEstStatus;
-    }
-
-    public void setMovEstStatus(MovStatus movEstStatus) {
-        this.movEstStatus = movEstStatus;
-    }
-
-
-    public Float getMovEstQtd() {
-        return this.movEstQtd;
-    }
-
-    public void setMovEstQtd(Float movEstQtd) {
-        this.movEstQtd = movEstQtd;
-    }
-
-    public Float getMovEstQtdAnterior() {
-        return this.movEstQtdAnterior;
-    }
-
-    public void setMovEstQtdAnterior(Float movEstQtdAnterior) {
-        this.movEstQtdAnterior = movEstQtdAnterior;
-    }
-
-    public Float getMovEstQtdPosterior() {
-        return this.movEstQtdPosterior;
-    }
-
-    public void setMovEstQtdPosterior(Float movEstQtdPosterior) {
-        this.movEstQtdPosterior = movEstQtdPosterior;
-    }
-
-    public Movimentacao getMovEstMovimentacao() {
-        return this.movEstMovimentacao;
-    }
-
-    public void setMovEstMovimentacao(Movimentacao movEstMovimentacao) {
-        this.movEstMovimentacao = movEstMovimentacao;
-    }
-
 }

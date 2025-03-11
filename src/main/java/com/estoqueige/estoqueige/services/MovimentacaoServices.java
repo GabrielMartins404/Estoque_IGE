@@ -6,6 +6,8 @@ import com.estoqueige.estoqueige.models.Movimentacao;
 import com.estoqueige.estoqueige.models.ProdutoMovimentacao;
 import com.estoqueige.estoqueige.models.enums.MovStatus;
 import com.estoqueige.estoqueige.repositories.MovimentacaoRepository;
+import com.estoqueige.estoqueige.services.exceptions.ErroAoBuscarObjetos;
+
 import jakarta.transaction.Transactional;
 
 import java.time.LocalDate;
@@ -59,7 +61,7 @@ public class MovimentacaoServices {
         movimentacaoDto.setMovData(movimentacao.getMovData());
         movimentacaoDto.setMovHorario(movimentacao.getMovHorario());
         movimentacaoDto.setMovDataCancelamento(movimentacao.getMovDataCancelamento());
-        movimentacaoDto.setMorarioCancelamento(movimentacao.getMovHorarioCancelamento());
+        movimentacaoDto.setMovHorarioCancelamento(movimentacao.getMovHorarioCancelamento());
         movimentacaoDto.setMovOrigem(movimentacao.getMovOrigem());
         movimentacaoDto.setMovTipo(movimentacao.getMovTipo());
         movimentacaoDto.setMovStatus(movimentacao.getMovStatus());
@@ -80,7 +82,7 @@ public class MovimentacaoServices {
 
     public Movimentacao buscarMovimentacaoPorId(Long id){
         Movimentacao movimentacao = this.movimentacaoRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Falha ao buscar Movimentacao"));
+            .orElseThrow(() -> new ErroAoBuscarObjetos("Falha ao buscar Movimentacao de código: "+ id));
 
         return movimentacao;
     }

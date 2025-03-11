@@ -2,6 +2,8 @@ package com.estoqueige.estoqueige.services;
 
 import com.estoqueige.estoqueige.models.Requisitante;
 import com.estoqueige.estoqueige.repositories.RequisitanteRepository;
+import com.estoqueige.estoqueige.services.exceptions.ErroAoBuscarObjetos;
+
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,7 @@ public class RequisitanteServices {
     /* Método services */
     public Requisitante buscarRequisitantePorId(Long id) {
         Optional<Requisitante> requisitante = this.requisitanteRepository.findById(id);
-        return requisitante.orElseThrow(() -> new RuntimeException("Não foi possivel encontrar o requisitante"));
+        return requisitante.orElseThrow(() -> new ErroAoBuscarObjetos("Não foi possivel encontrar o requisitante com id: "+id));
     }
 
     public List<Requisitante> buscarTodosRequisitantes() {
@@ -47,8 +49,7 @@ public class RequisitanteServices {
 
     @Transactional
     public Requisitante alterarStatusAtivoRequisitante(Long id) {
-        Requisitante requisitante = this.requisitanteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Requisitante não encontrado com o ID: " + id));
+        Requisitante requisitante = buscarRequisitantePorId(id);
 
         requisitante.setIsAtivo(!requisitante.getIsAtivo());
         return this.requisitanteRepository.save(requisitante);

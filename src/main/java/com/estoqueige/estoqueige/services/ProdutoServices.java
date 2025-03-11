@@ -6,6 +6,8 @@ import com.estoqueige.estoqueige.dto.ProdutoMovimentacaoDto;
 import com.estoqueige.estoqueige.models.MovimentacaoEstoque;
 import com.estoqueige.estoqueige.models.Produto;
 import com.estoqueige.estoqueige.repositories.ProdutoRepository;
+import com.estoqueige.estoqueige.services.exceptions.ErroAoBuscarObjetos;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -57,7 +59,7 @@ public class ProdutoServices {
 
     public Produto buscarProdutoPorId(Long id) {
         Produto produto = this.produtoRepository.findById(id).
-                orElseThrow(() -> new RuntimeException("Produto no encontrado"));
+                orElseThrow(() -> new ErroAoBuscarObjetos("Falha ao buscar produto com id: "+id));
         return produto;
     }
 

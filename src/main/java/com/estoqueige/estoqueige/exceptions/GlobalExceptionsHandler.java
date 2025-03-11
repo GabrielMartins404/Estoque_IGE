@@ -1,0 +1,98 @@
+package com.estoqueige.estoqueige.exceptions;
+
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import com.estoqueige.estoqueige.services.exceptions.ErroAoBuscarObjetos;
+
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
+
+@RestControllerAdvice //Adiciono para que o Spring inicie essa classe junto com a aplicação
+@Slf4j(topic = "ERROR_CAPTURADOS_GLOBALMENTE") //Aqui defino um log para poder capturar os erros no console
+public class GlobalExceptionsHandler extends ResponseEntityExceptionHandler{
+    
+    //Esse campo tem como propósito, definir se devo ou não mostrar as listas de erros
+    //Só devo mostrar quando estiver em desenvolvimento
+    @Value("${server.error.include-exception}") //Defino nas minhas propriedades quando devo tornar disponível essa parte acima
+    private boolean mostrarPilhasDeErros; 
+
+    //Esse método gerencia erros que ocorrem de campos não preenchidos corretamente, a quais são obrigatório no Banco de dados
+    @Override
+    //@ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException methodArgumentNotValidException, HttpHeaders headers, HttpStatusCode  status, WebRequest request){
+        ErrorResponse errorResponse = new ErrorResponse(
+            HttpStatus.UNPROCESSABLE_ENTITY.value(),
+            "Ocorreu um erro nas validações dos campos! Verifique os 'erros' para maiores detalhes"
+        );
+        for (FieldError fieldError : methodArgumentNotValidException.getBindingResult().getFieldErrors()) {
+            errorResponse.addValidationError(fieldError.getField(), fieldError.getDefaultMessage());
+        }
+
+        return ResponseEntity.unprocessableEntity().body(errorResponse);
+    }
+    
+
+    //Esse método é chamado em cada erros de exceção, a qual retorna as pilhas de erros
+    private ResponseEntity<Object> buildErrorResponse(Exception exception, String mensagem, HttpStatus httpStatus, WebRequest request){
+        ErrorResponse errorResponse = new ErrorResponse(httpStatus.value(), mensagem);
+        if(this.mostrarPilhasDeErros){
+            errorResponse.setPilhaDeErros(ExceptionUtils.getStackTrace(exception));
+        }
+
+        return ResponseEntity.status(httpStatus).body(errorResponse);
+    }
+
+    //Mesmo método acima mas sem a mensagem
+    private ResponseEntity<Object> buildErrorResponse(Exception exception, HttpStatus httpStatus, WebRequest request){
+
+        return buildErrorResponse(exception,exception.getMessage(), httpStatus, request);
+    }
+
+    //Método para erros em gerais, que envolvam a aplicação
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<Object> errosDesconhecidos(Exception exception, WebRequest request){
+        final String mensagemError = "Ocorreu um erro desconhecido";
+        log.error(mensagemError, exception);
+        return buildErrorResponse(exception, mensagemError, HttpStatus.INTERNAL_SERVER_ERROR, request);
+    }
+
+    //Método para erros de integridade e duplicação de dados únicas
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<Object> errosDeViolacaoDeIntegridadeDasEntidades(DataIntegrityViolationException dataIntegrityViolationException, WebRequest request){
+        String mensagemError = dataIntegrityViolationException.getMostSpecificCause().getMessage();
+        log.error("Falha ao salvar dados no Banco de dados: {}"+mensagemError, dataIntegrityViolationException);
+        return buildErrorResponse(dataIntegrityViolationException, mensagemError, HttpStatus.CONFLICT, request);
+    }
+
+    //Método para erros de violação de constraints e restrições dos campos
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ResponseEntity<Object> errosDeViolacaoDeCampos(ConstraintViolationException constraintViolationException, WebRequest request){
+        log.error("Falha ao validar elemento: {}", constraintViolationException);
+        return buildErrorResponse(constraintViolationException, HttpStatus.UNPROCESSABLE_ENTITY, request);
+    }
+
+    //Método para validar objetos não encontrados vindo dos services
+    @ExceptionHandler(ErroAoBuscarObjetos.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<Object> erroDeObjetosNaoEncontrados(ErroAoBuscarObjetos erroAoBuscarObjetos, WebRequest request){
+        log.error("Falha ao buscar elemento elemento: {}", erroAoBuscarObjetos);
+        return buildErrorResponse(erroAoBuscarObjetos, HttpStatus.NOT_FOUND, request);
+    }
+}
