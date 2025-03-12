@@ -7,6 +7,8 @@ import com.estoqueige.estoqueige.models.ProdutoMovimentacao;
 import com.estoqueige.estoqueige.models.enums.MovStatus;
 import com.estoqueige.estoqueige.repositories.MovimentacaoRepository;
 import com.estoqueige.estoqueige.services.exceptions.ErroAoBuscarObjetos;
+import com.estoqueige.estoqueige.services.exceptions.ErroMovimentacaoCancelada;
+import com.estoqueige.estoqueige.services.exceptions.ErroQtdNegativaProduto;
 
 import jakarta.transaction.Transactional;
 
@@ -101,7 +103,6 @@ public class MovimentacaoServices {
     //Método para salvar a movimentação no Banco de Dados
     @Transactional
     public void salvarMovimentacao(Movimentacao movimentacao) {
-        //Adicionar validação
 
         //Salvar a movimentação no banco de dados
         movimentacao.setMovId(null);
@@ -111,11 +112,14 @@ public class MovimentacaoServices {
 
         //É preciso fazer o vinculo da movimentação para os ProdutosMovimentações. Desse modo, é preciso fazer o loop abaixo
         for (ProdutoMovimentacao produtoMovimentacao : movimentacao.getProdutosMov()) {
-            produtoMovimentacao.setProMovMovimentacao(movimentacao);
+            if(produtoMovimentacao.getProMovQtdProduto() < 0){
+                throw new ErroQtdNegativaProduto("Não é possível realizar movimentação com quantidade negativa.");
+            }else{                
+                produtoMovimentacao.setProMovMovimentacao(movimentacao);
+            }
         }
 
         movimentacao = movimentacaoRepository.save(movimentacao);
-
 
         for (ProdutoMovimentacao produtoMovimentacao: movimentacao.getProdutosMov()){
             movimentacaoEstoqueServices.salvarMovimentacaoEstoque(movimentacao, produtoMovimentacao);
@@ -132,8 +136,10 @@ public class MovimentacaoServices {
 
     @Transactional
     public void cancelarMovimentacao(Long idMovimentacao){
-        //Adicionar validações
         Movimentacao movimentacao = this.buscarMovimentacaoPorId(idMovimentacao);
+        if(movimentacao.getMovStatus() == MovStatus.CANCELADO){
+            throw new ErroMovimentacaoCancelada("Não é possível cancelar a movimentação pois a mesma já está cancelada.");
+        }
         movimentacao.setMovDataCancelamento(LocalDate.now());
         movimentacao.setMovHorarioCancelamento(LocalTime.now());
         movimentacao.setMovStatus(MovStatus.CANCELADO);

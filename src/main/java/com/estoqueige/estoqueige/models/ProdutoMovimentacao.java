@@ -8,6 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -33,6 +35,8 @@ public class ProdutoMovimentacao {
     private Long proMovId;
 
     @Column(name = "proMovQtdProduto", nullable = false)
+    @NotNull
+    @PositiveOrZero(message = "A quantidade do item na movimentação não pode ser negativo")
     private Float proMovQtdProduto;
 
     /* Definição das chaves estrangeiras */

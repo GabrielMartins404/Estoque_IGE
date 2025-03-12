@@ -7,6 +7,8 @@ import com.estoqueige.estoqueige.models.ProdutoMovimentacao;
 import com.estoqueige.estoqueige.models.enums.MovStatus;
 import com.estoqueige.estoqueige.models.enums.MovTipo;
 import com.estoqueige.estoqueige.repositories.MovimentacaoEstoqueRepository;
+import com.estoqueige.estoqueige.services.exceptions.ErroCamposFixos;
+
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -64,17 +66,22 @@ public class MovimentacaoEstoqueServices {
         movimentacaoEstoque.setMovEstQtdPosterior(qtdPosterior);
 
         if(movimentacao.getMovStatus() == MovStatus.FINALIZADO || movimentacao.getMovStatus() == MovStatus.CANCELADO){
-            if(movimentacao.getMovStatus() == MovStatus.CANCELADO){
-                movimentacaoEstoque.setMovEstStatus(MovStatus.CANCELADO);
-                if(movimentacao.getMovTipo() == MovTipo.ENTRADA){
-                    movimentacaoEstoque.setMovEstTipo(MovTipo.SAIDA);
-                }else{
-                    movimentacaoEstoque.setMovEstTipo(MovTipo.ENTRADA);
+            if(movimentacao.getMovTipo() != MovTipo.ENTRADA || movimentacao.getMovTipo() != MovTipo.SAIDA){
+                throw new ErroCamposFixos("Tipo de movimentação inválido. Deve ser 'E' (Entrada) ou 'S' (Saida).");
+            }else{
+                if(movimentacao.getMovStatus() == MovStatus.CANCELADO){
+                    movimentacaoEstoque.setMovEstStatus(MovStatus.CANCELADO);
+                    if(movimentacao.getMovTipo() == MovTipo.ENTRADA){
+                        movimentacaoEstoque.setMovEstTipo(MovTipo.SAIDA);
+                    }else{
+                        movimentacaoEstoque.setMovEstTipo(MovTipo.ENTRADA);
+                    }
                 }
+                this.produtoServices.atualizarProduto(produto);
             }
-            this.produtoServices.atualizarProduto(produto);
+            
         }else{
-            throw new RuntimeException("Tipo de movimentação inválido. Deve ser 'E' (entrada) ou 'S' (saída).");
+            throw new ErroCamposFixos("Tipo de status inválido. Deve ser 'F' (finalizado) ou 'C' (cancelado).");
         }
         this.movimentacaoEstoqueRepository.save(movimentacaoEstoque);
     }

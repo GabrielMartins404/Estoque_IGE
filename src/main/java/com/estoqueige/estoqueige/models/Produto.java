@@ -9,6 +9,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,11 +38,11 @@ public class Produto {
     private Long proId;
 
     @Column(name = "proNome", length = 100, nullable = false)
-    @NotBlank
+    @NotBlank(message = "O nome do produto não pode ser vazio e nem nulo")
     private String proNome;
 
     @Column(name = "proSipac", length = 30, nullable = false)
-    @NotBlank
+    @NotBlank(message = "O código SIPAC do produto não pode ser vazio e nem nulo")
     private String proSipac;
 
     @Column(name = "proQtd", nullable = false, columnDefinition = "FLOAT DEFAULT 0")

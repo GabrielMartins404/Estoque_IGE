@@ -31,7 +31,6 @@ public class FaculdadeServices {
         return faculdades;
     }
 
-    //Implementar validação
     @Transactional
     public Faculdade cadastrarFaculdade(Faculdade faculdade){
         faculdade.setFacId(null);

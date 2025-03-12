@@ -3,6 +3,7 @@ package com.estoqueige.estoqueige.services;
 import com.estoqueige.estoqueige.models.Usuario;
 import com.estoqueige.estoqueige.repositories.UsuarioRepository;
 import com.estoqueige.estoqueige.services.exceptions.ErroAoBuscarObjetos;
+import com.estoqueige.estoqueige.services.exceptions.ErroValidacoesObjRepetidos;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
@@ -34,8 +35,13 @@ public class UsuarioServices {
 
     @Transactional
     public Usuario cadastrarUsuario(Usuario usuario) {
-        usuario.setUsuId(null);
-        return this.usuarioRepository.save(usuario);
+        
+        if(this.usuarioRepository.findByUsuLogin(usuario.getUsuLogin()).isPresent()){
+            throw new ErroValidacoesObjRepetidos("Já existe um usuário cadastrado com esse login! Realizar login, por gentileza");
+        }else{
+            usuario.setUsuId(null);
+            return this.usuarioRepository.save(usuario);
+        }
     }
 
     @Transactional

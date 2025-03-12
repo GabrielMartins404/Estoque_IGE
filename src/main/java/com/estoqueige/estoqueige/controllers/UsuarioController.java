@@ -17,6 +17,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.estoqueige.estoqueige.models.Usuario;
 import com.estoqueige.estoqueige.services.UsuarioServices;
 
+import jakarta.validation.Valid;
+
 @RestController
 @Validated
 @RequestMapping("/usuario")
@@ -41,7 +43,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Usuario> criarUsuario(@RequestBody Usuario usuario){
+    public ResponseEntity<Usuario> criarUsuario(@Valid @RequestBody Usuario usuario){
         this.usuarioServices.cadastrarUsuario(usuario);
         
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{idUsuario}").buildAndExpand(usuario.getUsuId()).toUri();
@@ -49,13 +51,13 @@ public class UsuarioController {
     }
 
     @PutMapping("/{idUsuario}")
-    public ResponseEntity<Usuario> atualizarUsuario(@RequestBody Usuario usuario, @PathVariable Long idUsuario){
+    public ResponseEntity<Usuario> atualizarUsuario(@Valid @RequestBody Usuario usuario, @PathVariable Long idUsuario){
         usuario.setUsuId(idUsuario);
         return ResponseEntity.ok(this.usuarioServices.atualizarUsuario(usuario));
     }
 
     @PutMapping("/inativar/{idUsuario}")
-    public ResponseEntity<Void> inativarUsuario(@PathVariable Long idUsuario){
+    public ResponseEntity<Void> inativarUsuario(@Valid @PathVariable Long idUsuario){
         this.usuarioServices.alterarStatusAtivoUsuario(idUsuario);
         return ResponseEntity.noContent().build();
     }

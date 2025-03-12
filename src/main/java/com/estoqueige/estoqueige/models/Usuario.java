@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -30,15 +31,16 @@ public class Usuario {
     private Long usuId;
 
     @Column(name = "usuNome", length = 100, nullable = false)
-    @NotBlank
+    @NotBlank(message = "O nome do usuário não pode ser nem vazio e nem nulo")
     private String usuNome;
 
     @Column(name = "usuLogin", length = 60, nullable = false, unique = true)
-    @NotBlank
+    @NotBlank(message = "O email do usuário não pode ser nem vazio e nem nulo")
+    @Email(message = "O email do usuário precisa ser válido")
     private String usuLogin;
 
     @Column(name = "usuSenha", length = 30, nullable = false)
-    @NotBlank
+    @NotBlank(message = "A senha do usuário não pode ser nem vazio e nem nulo")
     private String usuSenha;
 
     @Column(name = "isAtivo", columnDefinition = "TINYINT(1) DEFAULT 1")

@@ -18,6 +18,8 @@ import com.estoqueige.estoqueige.dto.MovimentacaoDto;
 import com.estoqueige.estoqueige.models.Movimentacao;
 import com.estoqueige.estoqueige.services.MovimentacaoServices;
 
+import jakarta.validation.Valid;
+
 @RestController
 @Validated
 @RequestMapping("/movimentacao")
@@ -41,7 +43,7 @@ public class MovimentacaoController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Movimentacao> criarMovimentacao(@RequestBody Movimentacao movimentacao){
+    public ResponseEntity<Movimentacao> criarMovimentacao(@Valid @RequestBody Movimentacao movimentacao){
         this.movimentacaoServices.salvarMovimentacao(movimentacao);
         
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{idMovimentacao}").buildAndExpand(movimentacao.getMovId()).toUri();
@@ -49,7 +51,7 @@ public class MovimentacaoController {
     }
 
     @PutMapping("/cancelarMovimentacao/{idMovimentacao}")
-    public ResponseEntity<Void> cancelarMovimentacao(@PathVariable Long idMovimentacao){
+    public ResponseEntity<Void> cancelarMovimentacao(@Valid @PathVariable Long idMovimentacao){
         this.movimentacaoServices.cancelarMovimentacao(idMovimentacao);
         return ResponseEntity.noContent().build();
     }

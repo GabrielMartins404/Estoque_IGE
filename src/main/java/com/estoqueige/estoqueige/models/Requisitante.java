@@ -33,7 +33,7 @@ public class Requisitante {
     private Long reqId;
 
     @Column(name = "reqNome", length = 100, nullable = false)
-    @NotBlank
+    @NotBlank(message = "O nome do requisitante não pode ser vazio e nem nulo")
     private String reqNome;
 
     @Column(name = "isAtivo", columnDefinition = "TINYINT(1) DEFAULT 1")

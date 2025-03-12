@@ -10,6 +10,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.estoqueige.estoqueige.models.Faculdade;
 import com.estoqueige.estoqueige.services.FaculdadeServices;
+
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,7 +43,7 @@ public class FaculdadeController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Faculdade> criarFaculdade(@RequestBody Faculdade faculdade){
+    public ResponseEntity<Faculdade> criarFaculdade(@Valid @RequestBody Faculdade faculdade){
         this.faculdadeServices.cadastrarFaculdade(faculdade);
         
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{idFaculdade}").buildAndExpand(faculdade.getFacId()).toUri();
@@ -48,13 +51,13 @@ public class FaculdadeController {
     }
 
     @PutMapping("/{idFaculdade}")
-    public ResponseEntity<Faculdade> atualizarFaculdade(@RequestBody Faculdade faculdade, @PathVariable Long idFaculdade){
+    public ResponseEntity<Faculdade> atualizarFaculdade(@Valid @RequestBody Faculdade faculdade, @PathVariable Long idFaculdade){
         faculdade.setFacId(idFaculdade);
         return ResponseEntity.ok(this.faculdadeServices.atualizarFaculdade(faculdade));
     }
 
     @PutMapping("/inativar/{idFaculdade}")
-    public ResponseEntity<Void> inativarFaculdade(@PathVariable Long idFaculdade){
+    public ResponseEntity<Void> inativarFaculdade(@Valid @PathVariable Long idFaculdade){
         this.faculdadeServices.alterarStatusAtivoFaculdade(idFaculdade);
         return ResponseEntity.noContent().build();
     }

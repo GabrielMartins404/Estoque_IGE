@@ -17,6 +17,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.estoqueige.estoqueige.models.Requisitante;
 import com.estoqueige.estoqueige.services.RequisitanteServices;
 
+import jakarta.validation.Valid;
+
 @RestController
 @Validated
 @RequestMapping("/requisitante")
@@ -42,7 +44,7 @@ public class RequisitanteController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Requisitante> criarRequisitante(@RequestBody Requisitante requisitante){
+    public ResponseEntity<Requisitante> criarRequisitante(@Valid @RequestBody Requisitante requisitante){
         this.requisitanteServices.cadastrarRequisitante(requisitante);
         
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{idRequisitante}").buildAndExpand(requisitante.getReqId()).toUri();
@@ -50,13 +52,13 @@ public class RequisitanteController {
     }
 
     @PutMapping("/{idRequisitante}")
-    public ResponseEntity<Requisitante> atualizarRequisitante(@RequestBody Requisitante requisitante, @PathVariable Long idRequisitante){
+    public ResponseEntity<Requisitante> atualizarRequisitante(@Valid @RequestBody Requisitante requisitante, @PathVariable Long idRequisitante){
         requisitante.setReqId(idRequisitante);
         return ResponseEntity.ok(this.requisitanteServices.atualizarRequisitante(requisitante));
     }
 
     @PutMapping("/inativar/{idRequisitante}")
-    public ResponseEntity<Void> inativarRequisitante(@PathVariable Long idRequisitante){
+    public ResponseEntity<Void> inativarRequisitante(@Valid @PathVariable Long idRequisitante){
         this.requisitanteServices.alterarStatusAtivoRequisitante(idRequisitante);
         return ResponseEntity.noContent().build();
     }

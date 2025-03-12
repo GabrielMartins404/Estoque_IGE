@@ -50,11 +50,9 @@ public class Movimentacao {
     private Long movId;
 
     @Column(name = "movData", nullable = false)
-    @NotNull
     private LocalDate movData;
 
     @Column(name = "movDataHorario", nullable = false)
-    @NotNull
     private LocalTime movHorario;
 
     @Column(name = "movDataCancelamento", nullable = true)

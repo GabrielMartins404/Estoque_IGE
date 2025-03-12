@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,6 +17,10 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.estoqueige.estoqueige.services.exceptions.ErroAoBuscarObjetos;
+import com.estoqueige.estoqueige.services.exceptions.ErroCamposFixos;
+import com.estoqueige.estoqueige.services.exceptions.ErroMovimentacaoCancelada;
+import com.estoqueige.estoqueige.services.exceptions.ErroQtdNegativaProduto;
+import com.estoqueige.estoqueige.services.exceptions.ErroValidacoesObjRepetidos;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -76,7 +81,7 @@ public class GlobalExceptionsHandler extends ResponseEntityExceptionHandler{
     @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<Object> errosDeViolacaoDeIntegridadeDasEntidades(DataIntegrityViolationException dataIntegrityViolationException, WebRequest request){
         String mensagemError = dataIntegrityViolationException.getMostSpecificCause().getMessage();
-        log.error("Falha ao salvar dados no Banco de dados: {}"+mensagemError, dataIntegrityViolationException);
+        log.error("Falha ao salvar dados no Banco de dados: {}",mensagemError, dataIntegrityViolationException);
         return buildErrorResponse(dataIntegrityViolationException, mensagemError, HttpStatus.CONFLICT, request);
     }
 
@@ -88,6 +93,7 @@ public class GlobalExceptionsHandler extends ResponseEntityExceptionHandler{
         return buildErrorResponse(constraintViolationException, HttpStatus.UNPROCESSABLE_ENTITY, request);
     }
 
+    /* Abaixo são erros personalizados */
     //Método para validar objetos não encontrados vindo dos services
     @ExceptionHandler(ErroAoBuscarObjetos.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -95,4 +101,37 @@ public class GlobalExceptionsHandler extends ResponseEntityExceptionHandler{
         log.error("Falha ao buscar elemento elemento: {}", erroAoBuscarObjetos);
         return buildErrorResponse(erroAoBuscarObjetos, HttpStatus.NOT_FOUND, request);
     }
+
+    //Método mais especilizado para evitar duplicidade de informações únicas
+    @ExceptionHandler(ErroValidacoesObjRepetidos.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<Object> errosDeDuplicidadeDeObjUnicos(ErroValidacoesObjRepetidos erroValidacoesObjRepetidos, WebRequest request){
+        log.error("Falha ao inserir elemento. Dado repetido: {}", erroValidacoesObjRepetidos);
+        return buildErrorResponse(erroValidacoesObjRepetidos, HttpStatus.CONFLICT, request);
+    }
+
+    //Método para impedir a inserção de itens com quantidade negativa
+    @ExceptionHandler(ErroQtdNegativaProduto.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ResponseEntity<Object> erroQtdNegativa(ErroQtdNegativaProduto erroQtdNegativaProduto, WebRequest request){
+        log.error("Não é possível inserir itens na movimentacao com estoque negativo: {}", erroQtdNegativaProduto);
+        return buildErrorResponse(erroQtdNegativaProduto, HttpStatus.UNPROCESSABLE_ENTITY, request);
+    }
+
+    //Método para impedir cancelar movimetação já cancelada
+    @ExceptionHandler(ErroMovimentacaoCancelada.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ResponseEntity<Object> erroMovimentacaoCancelamento(ErroMovimentacaoCancelada erroMovimentacaoCancelada, WebRequest request){
+        log.error("Não é possível cancelar a movimentação pois a mesma já está cancelada: {}", erroMovimentacaoCancelada);
+        return buildErrorResponse(erroMovimentacaoCancelada, HttpStatus.UNPROCESSABLE_ENTITY, request);
+    }
+
+     //Método para violação de BadRequest de campos fixos
+     @ExceptionHandler(ErroCamposFixos.class)
+     @ResponseStatus(HttpStatus.BAD_REQUEST)
+     public ResponseEntity<Object> handleBadRequestExceptions(ErroCamposFixos erroCamposFixos, WebRequest request) {
+        
+        log.error("Erro dos campos fixos: {}", erroCamposFixos);
+        return buildErrorResponse(erroCamposFixos, HttpStatus.BAD_REQUEST, request);
+     }
 }

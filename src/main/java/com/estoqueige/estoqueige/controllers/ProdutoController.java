@@ -18,6 +18,8 @@ import com.estoqueige.estoqueige.dto.ProdutoDto;
 import com.estoqueige.estoqueige.models.Produto;
 import com.estoqueige.estoqueige.services.ProdutoServices;
 
+import jakarta.validation.Valid;
+
 @RestController
 @Validated
 @RequestMapping("/produto")
@@ -42,7 +44,7 @@ public class ProdutoController {
     }
 
     @PostMapping(value = "/",  consumes = "application/json")
-    public ResponseEntity<Produto> criarProduto(@RequestBody Produto produto){
+    public ResponseEntity<Produto> criarProduto(@Valid @RequestBody Produto produto){
         this.produtoServices.cadastrarProduto(produto);
         
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -53,13 +55,13 @@ public class ProdutoController {
     }
 
     @PutMapping("/{idProduto}")
-    public ResponseEntity<Produto> atualizarProduto(@RequestBody Produto produto, @PathVariable Long idProduto){
+    public ResponseEntity<Produto> atualizarProduto(@Valid @RequestBody Produto produto, @PathVariable Long idProduto){
         produto.setProId(idProduto);
         return ResponseEntity.ok(this.produtoServices.atualizarProduto(produto));
     }
 
     @PutMapping("/inativar/{idProduto}")
-    public ResponseEntity<Void> inativarProduto(@PathVariable Long idProduto){
+    public ResponseEntity<Void> inativarProduto(@Valid @PathVariable Long idProduto){
         this.produtoServices.alterarStatusAtivoProduto(idProduto);
         return ResponseEntity.noContent().build();
     }

@@ -50,10 +50,12 @@ public class MovimentacaoEstoque {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @NotNull
     private MovTipo movEstTipo;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @NotNull
     private MovStatus movEstStatus;
 
     @Column(name = "movEstQtd", nullable = false)

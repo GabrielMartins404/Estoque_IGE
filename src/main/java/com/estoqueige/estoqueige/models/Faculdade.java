@@ -40,7 +40,7 @@ public class Faculdade {
     private Long facId;
 
     @Column(name = "facNome", length = 50, nullable = false)
-    @NotBlank(message = "O nome não pode ser nulo nem vazio")
+    @NotBlank(message = "O nome da faculdade não pode ser nulo nem vazio")
     private String facNome;
 
     @Column(name = "isAtivo", columnDefinition = "TINYINT(1) DEFAULT 1")
