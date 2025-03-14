@@ -1,23 +1,42 @@
 package com.estoqueige.estoqueige.services;
 
+import com.estoqueige.estoqueige.EstoqueIgeApplication;
+import com.estoqueige.estoqueige.controllers.FaculdadeController;
 import com.estoqueige.estoqueige.models.Usuario;
+import com.estoqueige.estoqueige.models.enums.PerfisUsuario;
 import com.estoqueige.estoqueige.repositories.UsuarioRepository;
 import com.estoqueige.estoqueige.services.exceptions.ErroAoBuscarObjetos;
+import com.estoqueige.estoqueige.services.exceptions.ErroCamposFixos;
 import com.estoqueige.estoqueige.services.exceptions.ErroValidacoesObjRepetidos;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UsuarioServices {
+
+    private final FaculdadeController faculdadeController;
+
+    private final EstoqueIgeApplication estoqueIgeApplication;
+
+    private final CorsConfigurationSource corsConfigurationSource;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder; //Aqui serve para criptografar
+    
     private final UsuarioRepository usuarioRepository;
 
-    public UsuarioServices(UsuarioRepository usuarioRepository) {
+    public UsuarioServices(UsuarioRepository usuarioRepository, CorsConfigurationSource corsConfigurationSource, EstoqueIgeApplication estoqueIgeApplication, FaculdadeController faculdadeController) {
         this.usuarioRepository = usuarioRepository;
+        this.corsConfigurationSource = corsConfigurationSource;
+        this.estoqueIgeApplication = estoqueIgeApplication;
+        this.faculdadeController = faculdadeController;
     }
 
     /* Método services */
@@ -40,6 +59,16 @@ public class UsuarioServices {
             throw new ErroValidacoesObjRepetidos("Já existe um usuário cadastrado com esse login! Realizar login, por gentileza");
         }else{
             usuario.setUsuId(null);
+            usuario.setUsuSenha(this.bCryptPasswordEncoder.encode(usuario.getUsuSenha())); //Esse método criptografa a senha
+
+            if(usuario.getUsuPerfil() == PerfisUsuario.ADMIN){
+                usuario.setUsuPerfil(PerfisUsuario.ADMIN);
+            }else if(usuario.getUsuPerfil() == PerfisUsuario.ALMOXARIFADO || usuario.getUsuPerfil() == null){
+                usuario.setUsuPerfil(PerfisUsuario.ALMOXARIFADO);
+            }else{
+                throw new ErroCamposFixos("O perfil de usuário é inválido");
+            }
+            
             return this.usuarioRepository.save(usuario);
         }
     }

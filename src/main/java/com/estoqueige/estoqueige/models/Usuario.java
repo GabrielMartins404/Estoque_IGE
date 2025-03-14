@@ -1,7 +1,11 @@
 package com.estoqueige.estoqueige.models;
 
+import com.estoqueige.estoqueige.models.enums.PerfisUsuario;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -39,7 +43,7 @@ public class Usuario {
     @Email(message = "O email do usuário precisa ser válido")
     private String usuLogin;
 
-    @Column(name = "usuSenha", length = 30, nullable = false)
+    @Column(name = "usuSenha", length = 60, nullable = false)
     @NotBlank(message = "A senha do usuário não pode ser nem vazio e nem nulo")
     private String usuSenha;
 
@@ -47,7 +51,7 @@ public class Usuario {
     @NotNull
     private Boolean isAtivo;
 
-    @Column(name = "isAdmin", columnDefinition = "TINYINT(1) DEFAULT 0")
-    @NotNull
-    private Boolean isAdmin;
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "usuPerfil", nullable = false)
+    private PerfisUsuario usuPerfil;
 }
