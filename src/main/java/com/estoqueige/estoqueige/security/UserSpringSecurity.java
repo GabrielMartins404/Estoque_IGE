@@ -49,6 +49,6 @@ public class UserSpringSecurity implements UserDetails {
     }
 
     public boolean hasRole(PerfisUsuario perfisUsuario){
-        return getAuthorities().contains(new SimpleGrantedAuthority(perfisUsuario.getDescricao()));
+        return authorities.stream().anyMatch(auth -> auth.getAuthority().equals(perfisUsuario.getDescricao()));
     }
 }

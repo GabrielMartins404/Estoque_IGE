@@ -1,5 +1,7 @@
 package com.estoqueige.estoqueige.exceptions;
 
+import java.io.IOException;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -8,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,13 +26,16 @@ import com.estoqueige.estoqueige.services.exceptions.ErroMovimentacaoCancelada;
 import com.estoqueige.estoqueige.services.exceptions.ErroQtdNegativaProduto;
 import com.estoqueige.estoqueige.services.exceptions.ErroValidacoesObjRepetidos;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 
 @RestControllerAdvice //Adiciono para que o Spring inicie essa classe junto com a aplicação
 @Slf4j(topic = "ERROR_CAPTURADOS_GLOBALMENTE") //Aqui defino um log para poder capturar os erros no console
-public class GlobalExceptionsHandler extends ResponseEntityExceptionHandler{
+public class GlobalExceptionsHandler extends ResponseEntityExceptionHandler implements AuthenticationFailureHandler{
     
     //Esse campo tem como propósito, definir se devo ou não mostrar as listas de erros
     //Só devo mostrar quando estiver em desenvolvimento
@@ -134,4 +141,16 @@ public class GlobalExceptionsHandler extends ResponseEntityExceptionHandler{
         log.error("Erro dos campos fixos: {}", erroCamposFixos);
         return buildErrorResponse(erroCamposFixos, HttpStatus.BAD_REQUEST, request);
      }
+
+
+    @Override
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+        Integer status = HttpStatus.FORBIDDEN.value();
+        response.setStatus(status);
+        response.setContentType("application/json");
+
+        ErrorResponse errorResponse = new ErrorResponse(status, "Login ou senha inválidos");
+        response.getWriter().append(errorResponse.toJson());
+
+    }
 }

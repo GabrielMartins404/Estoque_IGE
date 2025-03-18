@@ -2,17 +2,24 @@ package com.estoqueige.estoqueige.configs;
 
 import com.estoqueige.estoqueige.EstoqueIgeApplication;
 import com.estoqueige.estoqueige.controllers.FaculdadeController;
+import com.estoqueige.estoqueige.security.JWTAuthenticationFilter;
+import com.estoqueige.estoqueige.security.JWTutil;
 
 import java.util.Arrays;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
@@ -24,9 +31,16 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableMethodSecurity //todos os métodos terão segurança antes de ocorrem
 public class SecurityConfig {
 
-    private final FaculdadeController faculdadeController;
+    private AuthenticationManager authenticationManager;
 
-    private final EstoqueIgeApplication estoqueIgeApplication;
+    @Lazy
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Lazy
+    @Autowired
+    private JWTutil jwtUtil;
+
     //Indico quais rotas do sistema não precisará de autenticação
     private static final String[] PUBLIC_MATCHERS = {
         "/"
@@ -37,13 +51,17 @@ public class SecurityConfig {
         "/usuario/"
     };
 
-    SecurityConfig(EstoqueIgeApplication estoqueIgeApplication, FaculdadeController faculdadeController) {
-        this.estoqueIgeApplication = estoqueIgeApplication;
-        this.faculdadeController = faculdadeController;
-    }
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+
+        AuthenticationManagerBuilder authenticationManagerBuilder = http
+            .getSharedObject(AuthenticationManagerBuilder.class);
+
+        authenticationManagerBuilder.userDetailsService(this.userDetailsService)
+            .passwordEncoder(bCryptPasswordEncoder());
+
+        this.authenticationManager = authenticationManagerBuilder.build();
+
         http
             .cors(cors -> cors.disable())
             .csrf(csrf -> csrf.disable())
@@ -51,8 +69,12 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
                 .requestMatchers(PUBLIC_MATCHERS).permitAll()
-                .anyRequest().authenticated());
+                .anyRequest().authenticated())
+                .authenticationManager(authenticationManager);
 
+        http
+            .addFilter(new JWTAuthenticationFilter(this.authenticationManager, this.jwtUtil));
+        
         
         return http.build();
     }

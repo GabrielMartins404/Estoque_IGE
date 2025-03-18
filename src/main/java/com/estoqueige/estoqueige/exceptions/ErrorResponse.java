@@ -38,4 +38,9 @@ public class ErrorResponse {
 
         this.errors.add(new ValidationError(field, mensagem));
     }
+
+    public String toJson(){
+        return "{\"status\": "+getStatus() + ", "+
+                "\"message\": \"" + getMensagem() + "\"}";
+    }
 }
