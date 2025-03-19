@@ -3,6 +3,7 @@ package com.estoqueige.estoqueige.configs;
 import com.estoqueige.estoqueige.EstoqueIgeApplication;
 import com.estoqueige.estoqueige.controllers.FaculdadeController;
 import com.estoqueige.estoqueige.security.JWTAuthenticationFilter;
+import com.estoqueige.estoqueige.security.JWTAuthorizationFilter;
 import com.estoqueige.estoqueige.security.JWTutil;
 
 import java.util.Arrays;
@@ -75,6 +76,8 @@ public class SecurityConfig {
         http
             .addFilter(new JWTAuthenticationFilter(this.authenticationManager, this.jwtUtil));
         
+        http
+            .addFilter(new JWTAuthorizationFilter(this.authenticationManager, this.jwtUtil, this.userDetailsService));
         
         return http.build();
     }

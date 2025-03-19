@@ -10,12 +10,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsConfigurationSource;
 import com.estoqueige.estoqueige.EstoqueIgeApplication;
+import com.estoqueige.estoqueige.controllers.FaculdadeController;
+import com.estoqueige.estoqueige.repositories.FaculdadeRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JWTutil {
+
+    private final FaculdadeRepository faculdadeRepository;
+
+    private final FaculdadeController faculdadeController;
 
     private final EstoqueIgeApplication estoqueIgeApplication;
 
@@ -28,10 +34,12 @@ public class JWTutil {
     @Value("${jwt.expiration}")
     private Long expiration;
 
-    JWTutil(BCryptPasswordEncoder bCryptPasswordEncoder, CorsConfigurationSource corsConfigurationSource, EstoqueIgeApplication estoqueIgeApplication) {
+    JWTutil(BCryptPasswordEncoder bCryptPasswordEncoder, CorsConfigurationSource corsConfigurationSource, EstoqueIgeApplication estoqueIgeApplication, FaculdadeController faculdadeController, FaculdadeRepository faculdadeRepository) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.corsConfigurationSource = corsConfigurationSource;
         this.estoqueIgeApplication = estoqueIgeApplication;
+        this.faculdadeController = faculdadeController;
+        this.faculdadeRepository = faculdadeRepository;
     }
 
     public String generateToken(String userName){
@@ -60,6 +68,15 @@ public class JWTutil {
             }
         }
         return false;
+    }
+
+
+    public String getUserName(String token){
+        Claims claims = getClaims(token);
+        if(Objects.nonNull(claims)){
+            return claims.getSubject();
+        }
+        return null;
     }
 
     private Claims getClaims(String token){

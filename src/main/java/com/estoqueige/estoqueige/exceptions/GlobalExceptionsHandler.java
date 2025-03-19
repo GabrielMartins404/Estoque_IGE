@@ -1,6 +1,7 @@
 package com.estoqueige.estoqueige.exceptions;
 
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +22,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.estoqueige.estoqueige.services.exceptions.ErroAoBuscarObjetos;
+import com.estoqueige.estoqueige.services.exceptions.ErroAutorizacao;
 import com.estoqueige.estoqueige.services.exceptions.ErroCamposFixos;
 import com.estoqueige.estoqueige.services.exceptions.ErroMovimentacaoCancelada;
 import com.estoqueige.estoqueige.services.exceptions.ErroQtdNegativaProduto;
@@ -92,7 +94,23 @@ public class GlobalExceptionsHandler extends ResponseEntityExceptionHandler impl
         return buildErrorResponse(dataIntegrityViolationException, mensagemError, HttpStatus.CONFLICT, request);
     }
 
-    //Método para erros de violação de constraints e restrições dos campos
+    //Método para validação de Erro de autenticação
+    @ExceptionHandler(AuthenticationException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ResponseEntity<Object> errosDeAutenticacao(AuthenticationException authenticationException, WebRequest request){
+        log.error("Erro de autenticação: {}", authenticationException);
+        return buildErrorResponse(authenticationException, HttpStatus.UNPROCESSABLE_ENTITY, request);
+    }
+
+    //Método para validação de Erro de acesso negado
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<Object> errosDeAutorizacao(AccessDeniedException accessDeniedException, WebRequest request){
+        log.error("Permissão de usuário negada: {}", accessDeniedException);
+        return buildErrorResponse(accessDeniedException, HttpStatus.UNPROCESSABLE_ENTITY, request);
+    }
+
+    //Método para validação de Erro de elementos inválidos
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ResponseEntity<Object> errosDeViolacaoDeCampos(ConstraintViolationException constraintViolationException, WebRequest request){
@@ -142,10 +160,19 @@ public class GlobalExceptionsHandler extends ResponseEntityExceptionHandler impl
         return buildErrorResponse(erroCamposFixos, HttpStatus.BAD_REQUEST, request);
      }
 
+     //Método para falha de permissão
+     @ExceptionHandler(ErroAutorizacao.class)
+     @ResponseStatus(HttpStatus.UNAUTHORIZED)
+     public ResponseEntity<Object> erroAutorizacaoUsuario(ErroAutorizacao erroAutorizacao, WebRequest request) {
+        
+        log.error("Usuário não possui permissão: {}", erroAutorizacao);
+        return buildErrorResponse(erroAutorizacao, HttpStatus.BAD_REQUEST, request);
+     }
+
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        Integer status = HttpStatus.FORBIDDEN.value();
+        Integer status = HttpStatus.UNAUTHORIZED.value();
         response.setStatus(status);
         response.setContentType("application/json");
 

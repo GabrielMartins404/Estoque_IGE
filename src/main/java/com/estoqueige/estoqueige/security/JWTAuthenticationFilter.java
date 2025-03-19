@@ -1,5 +1,6 @@
 package com.estoqueige.estoqueige.security;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -14,7 +15,6 @@ import com.estoqueige.estoqueige.exceptions.GlobalExceptionsHandler;
 import com.estoqueige.estoqueige.models.Usuario;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,7 +40,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 userCredentials.getUsuLogin(), userCredentials.getUsuSenha(), Collections.emptyList());
     
             return this.authenticationManager.authenticate(authToken);
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException("Falha ao autenticar usuário: " + e.getMessage());
         }
     }
