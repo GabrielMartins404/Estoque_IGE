@@ -9,8 +9,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum PerfisUsuario {
-    ADMIN(1, "ROLE_ADMIN"),
-    ALMOXARIFADO(2, "ROLE_ALMOXARIFADO");
+    ADMIN(0, "ROLE_ADMIN"),
+    ALMOXARIFADO(1, "ROLE_ALMOXARIFADO");
 
     private Integer codigo;
     private String descricao;

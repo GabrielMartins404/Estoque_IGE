@@ -18,10 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -39,21 +37,29 @@ public class UsuarioServices {
     }
 
     /* Método services */
-    public boolean validarUsuario(String mensagem){
+    public Boolean validarUsuario(String mensagem) {
         UserSpringSecurity usuarioLogado = autenticado();
-        //Verifico se o usuário está logado, ou se não é admin
-        if(Objects.nonNull(usuarioLogado) && usuarioLogado.hasRole(PerfisUsuario.ADMIN)){
-            return true;
-        }else{
+    
+        System.out.println("Usuário logado: ======================================  " + usuarioLogado);
+        // Verifica se o usuário está autenticado
+        if (usuarioLogado == null) {
             throw new ErroAutorizacao(mensagem);
         }
+    
+        // Verifica se o usuário tem perfil de ADMIN
+        if (usuarioLogado.hasRole(PerfisUsuario.ADMIN)) {
+            return true;
+        }
+    
+        System.out.println("Perfil do usuário: " + usuarioLogado.getAuthorities());
+        throw new ErroAutorizacao(mensagem);
     }
 
     public Usuario buscarUsuarioPorId(Long id) {
         //Um usuário que não é adm deverá ver somente as informações dele
         UserSpringSecurity usuarioLogado = autenticado();
         //Verifico se o usuário está logado, ou se não é admin ou se está buscando um usuário cujo id não seja o mesmo do usuário, dará erro
-        if(!Objects.nonNull(usuarioLogado) || !usuarioLogado.hasRole(PerfisUsuario.ADMIN) && !id.equals(usuarioLogado.getId())){
+        if (usuarioLogado == null || (!usuarioLogado.hasRole(PerfisUsuario.ADMIN) && !id.equals(usuarioLogado.getId()))) {
             throw new ErroAutorizacao("Usuário não tem permissão para buscar outros usuários");
         }
 
@@ -62,15 +68,15 @@ public class UsuarioServices {
     }
 
     public List<Usuario> buscarTodosUsuarios() {
-        if(validarUsuario("Usuário não tem permissão para buscar outros usuários!!!")){
-            List<Usuario> usuarios = this.usuarioRepository.findAll();
-            return usuarios;
+        
+        if(!validarUsuario("Usuário não tem permissão para buscar outros usuários!!!")){
+            return null;
         }
-        return null;
+        
+        List<Usuario> usuarios = this.usuarioRepository.findAll();
+        return usuarios;
         
     }
-
-    //Implementar método de login
 
     @Transactional
     public Usuario cadastrarUsuario(Usuario usuario) {
@@ -81,12 +87,11 @@ public class UsuarioServices {
             usuario.setUsuId(null);
             usuario.setUsuSenha(this.bCryptPasswordEncoder.encode(usuario.getUsuSenha())); //Esse método criptografa a senha
 
-            //Esse campo não está validando corretamente
-            if(usuario.getUsuPerfil() == PerfisUsuario.ADMIN){
-                usuario.setUsuPerfil(PerfisUsuario.ADMIN);
-            }else if(usuario.getUsuPerfil() == PerfisUsuario.ALMOXARIFADO || usuario.getUsuPerfil() == null){
+            // Validação do perfil de usuário
+            if (usuario.getUsuPerfil() == null) {
+                //Se o usuário passado for inválido, o mesmo será almoxarifado
                 usuario.setUsuPerfil(PerfisUsuario.ALMOXARIFADO);
-            }else{
+            } else if (usuario.getUsuPerfil() != PerfisUsuario.ADMIN && usuario.getUsuPerfil() != PerfisUsuario.ALMOXARIFADO) {
                 throw new ErroCamposFixos("O perfil de usuário é inválido");
             }
             
@@ -107,14 +112,14 @@ public class UsuarioServices {
 
     @Transactional
     public Usuario alterarStatusAtivoUsuario(Long id) {
-        if(validarUsuario("Usuário não tem permissão para inativar usuários")){
-            Usuario usuario = this.buscarUsuarioPorId(id);
-
-            usuario.setIsAtivo(!usuario.getIsAtivo());
-            return this.usuarioRepository.save(usuario);    
+        if(!validarUsuario("Usuário não tem permissão para inativar usuários")){
+            return null;
         }
+        Usuario usuario = this.buscarUsuarioPorId(id);
 
-        return null;
+        usuario.setIsAtivo(!usuario.getIsAtivo());
+        return this.usuarioRepository.save(usuario);   
+        
         
     }
 

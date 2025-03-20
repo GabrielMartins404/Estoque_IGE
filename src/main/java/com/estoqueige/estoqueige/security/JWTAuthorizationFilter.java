@@ -33,7 +33,9 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter{
             String token = authorizationHeader.substring(7);
             UsernamePasswordAuthenticationToken auth = getAuthentication(token);
             if(Objects.nonNull(auth)){
+
                 SecurityContextHolder.getContext().setAuthentication(auth);
+                System.out.println("Usuário autenticado: " + SecurityContextHolder.getContext().getAuthentication());
             }
         }
         filterChain.doFilter(request, response);
@@ -43,10 +45,8 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter{
         if(this.jwtUtil.isValidToken(token)){
             String username = this.jwtUtil.getUserName(token);
             UserDetails user = this.userDetailsService.loadUserByUsername(username);
-            UsernamePasswordAuthenticationToken authenticatedUser = new UsernamePasswordAuthenticationToken(username, null, user.getAuthorities());
-            return authenticatedUser;
+            return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
         }
         return null;
     }
-
 }

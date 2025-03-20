@@ -1,7 +1,9 @@
 package com.estoqueige.estoqueige.security;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
 
@@ -41,14 +43,19 @@ public class JWTutil {
         this.faculdadeController = faculdadeController;
         this.faculdadeRepository = faculdadeRepository;
     }
+    public String generateToken(UserSpringSecurity user) {
+        SecretKey key = getKeyBySecret(); // Obtém a chave secreta
+        
+        List<String> roles = user.getAuthorities().stream()
+                .map(authority -> authority.getAuthority()) // Converte as roles para Strings
+                .collect(Collectors.toList());
 
-    public String generateToken(String userName){
-        SecretKey key = getKeyBySecret();
         return Jwts.builder()
-            .setSubject(userName)
-            .setExpiration(new Date(System.currentTimeMillis() + this.expiration))
-            .signWith(key)
-            .compact();
+                .setSubject(user.getUsername())  // Define o usuário no "sub"
+                .claim("roles", roles)           // Adiciona as permissões no token
+                .setExpiration(new Date(System.currentTimeMillis() + this.expiration))
+                .signWith(key)                   // Assina o token
+                .compact();
     }
 
     private SecretKey getKeyBySecret(){

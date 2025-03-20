@@ -1,6 +1,8 @@
 package com.estoqueige.estoqueige.models;
 
 import com.estoqueige.estoqueige.models.enums.PerfisUsuario;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -45,6 +47,7 @@ public class Usuario {
 
     @Column(name = "usuSenha", length = 60, nullable = false)
     @NotBlank(message = "A senha do usuário não pode ser nem vazio e nem nulo")
+    @JsonProperty(access = Access.WRITE_ONLY)
     private String usuSenha;
 
     @Column(name = "isAtivo", columnDefinition = "TINYINT(1) DEFAULT 1")
