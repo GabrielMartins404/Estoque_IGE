@@ -65,8 +65,9 @@ public class MovimentacaoEstoqueServices {
         produto.setProQtd(qtdPosterior);
         movimentacaoEstoque.setMovEstQtdPosterior(qtdPosterior);
 
+
         if(movimentacao.getMovStatus() == MovStatus.FINALIZADO || movimentacao.getMovStatus() == MovStatus.CANCELADO){
-            if(movimentacao.getMovTipo() != MovTipo.ENTRADA || movimentacao.getMovTipo() != MovTipo.SAIDA){
+            if(movimentacao.getMovTipo() != MovTipo.ENTRADA && movimentacao.getMovTipo() != MovTipo.SAIDA){
                 throw new ErroCamposFixos("Tipo de movimentação inválido. Deve ser 'E' (Entrada) ou 'S' (Saida).");
             }else{
                 if(movimentacao.getMovStatus() == MovStatus.CANCELADO){
@@ -76,6 +77,11 @@ public class MovimentacaoEstoqueServices {
                     }else{
                         movimentacaoEstoque.setMovEstTipo(MovTipo.ENTRADA);
                     }
+                }
+                if(produto.getProQtd() <=    produto.getProEstoqueMin()){
+                    produto.setIsAbaixoMin(true);
+                }else{
+                    produto.setIsAbaixoMin(false);
                 }
                 this.produtoServices.atualizarProduto(produto);
             }

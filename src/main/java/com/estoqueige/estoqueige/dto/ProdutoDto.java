@@ -1,27 +1,21 @@
 package com.estoqueige.estoqueige.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProdutoDto {
     private Long proId;
     private String proNome;
     private String proSipac;
     private Float proQtd;
+    private Float proEstoqueMin;
+    private Boolean isAbaixoMin;
     private Boolean isAtivo;
-
-    public ProdutoDto() {
-    }
-
-    public ProdutoDto(Long proId, String proNome, String proSipac, Float proQtd, Boolean isAtivo) {
-        this.proId = proId;
-        this.proNome = proNome;
-        this.proSipac = proSipac;
-        this.proQtd = proQtd;
-        this.isAtivo = isAtivo;
-        
-    }
     
 }

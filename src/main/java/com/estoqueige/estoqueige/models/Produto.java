@@ -49,8 +49,14 @@ public class Produto {
     @NotNull
     private Float proQtd;
 
+    @Column(name = "proEstoqueMin", nullable = true, columnDefinition = "FLOAT DEFAULT 0")
+    private Float proEstoqueMin;
+
+    @Column(name = "isAbaixoMin", nullable = true, columnDefinition = "TINYINT(1) DEFAULT 0")
+    private Boolean isAbaixoMin = false;
+
     @Column(name = "isAtivo", columnDefinition = "TINYINT(1) DEFAULT 1")
-    private Boolean isAtivo;
+    private Boolean isAtivo = true;
 
     /* Definição das chaves estrangeiras */
     @OneToMany(mappedBy = "proMovProduto")
@@ -64,11 +70,12 @@ public class Produto {
     @OneToMany(mappedBy = "movEstProduto")
     private List<MovimentacaoEstoque> movimentacaoEstoque = new ArrayList<>();
 
-    public Produto(Long proId, String proNome, String proSipac, Float proQtd, Boolean isAtivo, List<MovimentacaoEstoque> movimentacaoEstoque) {
+    public Produto(Long proId, String proNome, String proSipac, Float proQtd, Float proEstoqueMin, Boolean isAtivo, List<MovimentacaoEstoque> movimentacaoEstoque) {
         this.proId = proId;
         this.proNome = proNome;
         this.proSipac = proSipac;
         this.proQtd = proQtd;
+        this.proEstoqueMin = proEstoqueMin;
         this.isAtivo = isAtivo;
         this.movimentacaoEstoque = new ArrayList<>();
         this.produtoMovimentacoes = new ArrayList<>();

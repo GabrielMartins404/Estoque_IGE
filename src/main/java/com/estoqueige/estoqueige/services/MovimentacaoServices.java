@@ -3,12 +3,17 @@ package com.estoqueige.estoqueige.services;
 import com.estoqueige.estoqueige.dto.MovimentacaoDto;
 import com.estoqueige.estoqueige.dto.ProdutoMovimentacaoDto;
 import com.estoqueige.estoqueige.models.Movimentacao;
+import com.estoqueige.estoqueige.models.Produto;
 import com.estoqueige.estoqueige.models.ProdutoMovimentacao;
+import com.estoqueige.estoqueige.models.Usuario;
 import com.estoqueige.estoqueige.models.enums.MovStatus;
+import com.estoqueige.estoqueige.models.enums.MovTipo;
 import com.estoqueige.estoqueige.repositories.MovimentacaoRepository;
+import com.estoqueige.estoqueige.security.UserSpringSecurity;
 import com.estoqueige.estoqueige.services.exceptions.ErroAoBuscarObjetos;
+import com.estoqueige.estoqueige.services.exceptions.ErroAutorizacao;
 import com.estoqueige.estoqueige.services.exceptions.ErroMovimentacaoCancelada;
-import com.estoqueige.estoqueige.services.exceptions.ErroQtdNegativaProduto;
+import com.estoqueige.estoqueige.services.exceptions.ErroProduto;
 
 import jakarta.transaction.Transactional;
 
@@ -16,6 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -28,10 +34,13 @@ public class MovimentacaoServices {
 
     private final ProdutoServices produtoServices;
 
-    public MovimentacaoServices(MovimentacaoRepository movimentacaoRepository, MovimentacaoEstoqueServices movimentacaoEstoqueServices, ProdutoServices produtoServices) {
+    private final UsuarioServices usuarioServices;
+
+    public MovimentacaoServices(MovimentacaoRepository movimentacaoRepository, MovimentacaoEstoqueServices movimentacaoEstoqueServices, ProdutoServices produtoServices, UsuarioServices usuarioServices) {
         this.movimentacaoRepository = movimentacaoRepository;
         this.movimentacaoEstoqueServices = movimentacaoEstoqueServices;
         this.produtoServices = produtoServices;
+        this.usuarioServices = usuarioServices;
     }
 
 
@@ -104,18 +113,40 @@ public class MovimentacaoServices {
     @Transactional
     public void salvarMovimentacao(Movimentacao movimentacao) {
 
+        //Puxar Usuario do Context
+        UserSpringSecurity userSpringSecurity = UsuarioServices.autenticado();
+        if(Objects.isNull(userSpringSecurity)){
+            throw new ErroAutorizacao("Acesso negado!");
+        }
+        Usuario usuario = this.usuarioServices.buscarUsuarioPorId(userSpringSecurity.getId());
+
         //Salvar a movimentação no banco de dados
         movimentacao.setMovId(null);
         movimentacao.setMovStatus(MovStatus.FINALIZADO);
         movimentacao.setMovData(LocalDate.now());
         movimentacao.setMovHorario(LocalTime.now());
+        movimentacao.setMovUsuario(usuario);
 
         //É preciso fazer o vinculo da movimentação para os ProdutosMovimentações. Desse modo, é preciso fazer o loop abaixo
         for (ProdutoMovimentacao produtoMovimentacao : movimentacao.getProdutosMov()) {
+            //Valido se a quantidade inserida é maior que zero
             if(produtoMovimentacao.getProMovQtdProduto() < 0){
-                throw new ErroQtdNegativaProduto("Não é possível realizar movimentação com quantidade negativa.");
-            }else{                
-                produtoMovimentacao.setProMovMovimentacao(movimentacao);
+                throw new ErroProduto("Não é possível realizar movimentação com quantidade negativa.");
+            }else{    
+                
+                Produto produto = this.produtoServices.buscarProdutoPorId(produtoMovimentacao.getProMovProduto().getProId());  
+                //Verifico se o produto está ativo
+                if(produto.getIsAtivo()){
+                    //Verifico aqui se o produto tem estoque disponível para dar saída 
+                    if((produtoMovimentacao.getProMovQtdProduto() > produto.getProQtd()) && (movimentacao.getMovTipo() == MovTipo.SAIDA)){
+                        throw new ErroProduto("O produto '" +produto.getProNome()+ "' não possui estoque suficiente para concluir a saida");
+                    }else{
+                        produtoMovimentacao.setProMovMovimentacao(movimentacao);
+                    }    
+                }else{
+                    throw new ErroProduto("Produto "+produto.getProNome()+" está inativo e não pode ser movimentado!");
+                }
+                
             }
         }
 
@@ -136,6 +167,10 @@ public class MovimentacaoServices {
 
     @Transactional
     public void cancelarMovimentacao(Long idMovimentacao){
+        if(!this.usuarioServices.validarUsuario("Usuário não tem permissão para cancelar movimentacao.")){
+            
+        }
+
         Movimentacao movimentacao = this.buscarMovimentacaoPorId(idMovimentacao);
         if(movimentacao.getMovStatus() == MovStatus.CANCELADO){
             throw new ErroMovimentacaoCancelada("Não é possível cancelar a movimentação pois a mesma já está cancelada.");

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.estoqueige.estoqueige.models.Usuario;
 import com.estoqueige.estoqueige.repositories.UsuarioRepository;
 import com.estoqueige.estoqueige.security.UserSpringSecurity;
+import com.estoqueige.estoqueige.services.exceptions.ErroAutorizacao;
 
 @Service
 public class UserDetailsImplServices implements UserDetailsService{
@@ -29,15 +30,19 @@ public class UserDetailsImplServices implements UserDetailsService{
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Usuario> buscaUsuario = this.usuarioRepository.findByUsuLogin(username);
-        System.out.println("Usuário encontrado? " + buscaUsuario.get().getUsuPerfil());
         Usuario usuario = buscaUsuario.orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado."));
 
-        return new UserSpringSecurity(
-            usuario.getUsuId(), 
-            usuario.getUsuLogin(), 
-            usuario.getUsuSenha(), 
-            usuario.getUsuPerfil()
-        );
+        if(usuario.getIsAtivo()){
+            return new UserSpringSecurity(
+                usuario.getUsuId(), 
+                usuario.getUsuLogin(), 
+                usuario.getUsuSenha(), 
+                usuario.getUsuPerfil()
+            );
+        }else{
+            throw new ErroAutorizacao("Usuário está inativo e não possui permissão para acessar o sistema!");
+        }
+        
 
     }
     

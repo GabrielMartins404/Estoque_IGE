@@ -39,8 +39,7 @@ public class UsuarioServices {
     /* Método services */
     public Boolean validarUsuario(String mensagem) {
         UserSpringSecurity usuarioLogado = autenticado();
-    
-        System.out.println("Usuário logado: ======================================  " + usuarioLogado);
+
         // Verifica se o usuário está autenticado
         if (usuarioLogado == null) {
             throw new ErroAutorizacao(mensagem);
@@ -50,8 +49,7 @@ public class UsuarioServices {
         if (usuarioLogado.hasRole(PerfisUsuario.ADMIN)) {
             return true;
         }
-    
-        System.out.println("Perfil do usuário: " + usuarioLogado.getAuthorities());
+
         throw new ErroAutorizacao(mensagem);
     }
 

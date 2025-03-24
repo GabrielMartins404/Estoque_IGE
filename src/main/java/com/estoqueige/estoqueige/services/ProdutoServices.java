@@ -2,7 +2,6 @@ package com.estoqueige.estoqueige.services;
 
 import com.estoqueige.estoqueige.dto.MovEstoqueDto;
 import com.estoqueige.estoqueige.dto.ProdutoDto;
-import com.estoqueige.estoqueige.dto.ProdutoMovimentacaoDto;
 import com.estoqueige.estoqueige.models.MovimentacaoEstoque;
 import com.estoqueige.estoqueige.models.Produto;
 import com.estoqueige.estoqueige.repositories.ProdutoRepository;
@@ -51,6 +50,8 @@ public class ProdutoServices {
             produto.getProNome(),
             produto.getProSipac(),
             produto.getProQtd(),
+            produto.getProEstoqueMin(),
+            produto.getIsAbaixoMin(),
             produto.getIsAtivo()
         );
 

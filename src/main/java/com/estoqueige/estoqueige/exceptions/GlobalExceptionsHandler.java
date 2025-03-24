@@ -25,7 +25,7 @@ import com.estoqueige.estoqueige.services.exceptions.ErroAoBuscarObjetos;
 import com.estoqueige.estoqueige.services.exceptions.ErroAutorizacao;
 import com.estoqueige.estoqueige.services.exceptions.ErroCamposFixos;
 import com.estoqueige.estoqueige.services.exceptions.ErroMovimentacaoCancelada;
-import com.estoqueige.estoqueige.services.exceptions.ErroQtdNegativaProduto;
+import com.estoqueige.estoqueige.services.exceptions.ErroProduto;
 import com.estoqueige.estoqueige.services.exceptions.ErroValidacoesObjRepetidos;
 
 import jakarta.servlet.ServletException;
@@ -136,9 +136,9 @@ public class GlobalExceptionsHandler extends ResponseEntityExceptionHandler impl
     }
 
     //Método para impedir a inserção de itens com quantidade negativa
-    @ExceptionHandler(ErroQtdNegativaProduto.class)
+    @ExceptionHandler(ErroProduto.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    public ResponseEntity<Object> erroQtdNegativa(ErroQtdNegativaProduto erroQtdNegativaProduto, WebRequest request){
+    public ResponseEntity<Object> erroQtdNegativa(ErroProduto erroQtdNegativaProduto, WebRequest request){
         log.error("Não é possível inserir itens na movimentacao com estoque negativo: {}", erroQtdNegativaProduto);
         return buildErrorResponse(erroQtdNegativaProduto, HttpStatus.UNPROCESSABLE_ENTITY, request);
     }

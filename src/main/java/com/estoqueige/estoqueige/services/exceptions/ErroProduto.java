@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import jakarta.validation.ConstraintViolationException;
 
 @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-public class ErroQtdNegativaProduto extends RuntimeException{
-    public ErroQtdNegativaProduto(String mensagem){
+public class ErroProduto extends RuntimeException{
+    public ErroProduto(String mensagem){
         super(mensagem);
     }
 }
