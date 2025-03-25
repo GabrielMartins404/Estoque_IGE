@@ -51,7 +51,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{idUsuario}")
-    public ResponseEntity<Usuario> atualizarUsuario(@Valid @RequestBody Usuario usuario, @PathVariable Long idUsuario){
+    public ResponseEntity<Usuario> atualizarUsuario(@RequestBody Usuario usuario, @PathVariable Long idUsuario){
         usuario.setUsuId(idUsuario);
         return ResponseEntity.ok(this.usuarioServices.atualizarUsuario(usuario));
     }

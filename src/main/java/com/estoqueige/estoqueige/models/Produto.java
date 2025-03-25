@@ -5,11 +5,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -50,7 +51,7 @@ public class Produto {
     private Float proQtd;
 
     @Column(name = "proEstoqueMin", nullable = true, columnDefinition = "FLOAT DEFAULT 0")
-    private Float proEstoqueMin;
+    private Float proEstoqueMin = 0f;
 
     @Column(name = "isAbaixoMin", nullable = true, columnDefinition = "TINYINT(1) DEFAULT 0")
     private Boolean isAbaixoMin = false;
@@ -59,6 +60,10 @@ public class Produto {
     private Boolean isAtivo = true;
 
     /* Definição das chaves estrangeiras */
+    @ManyToOne
+    @JoinColumn(name = "unProduto", nullable = false)
+    private UnidadeProduto unProduto;
+
     @OneToMany(mappedBy = "proMovProduto")
     @JsonProperty(access = Access.WRITE_ONLY)
     private List<ProdutoMovimentacao> produtoMovimentacoes = new ArrayList<>();

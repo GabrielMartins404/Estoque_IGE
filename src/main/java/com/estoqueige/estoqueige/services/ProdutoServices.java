@@ -49,6 +49,7 @@ public class ProdutoServices {
             produto.getProId(),
             produto.getProNome(),
             produto.getProSipac(),
+            produto.getUnProduto().getUnSigla(),
             produto.getProQtd(),
             produto.getProEstoqueMin(),
             produto.getIsAbaixoMin(),
@@ -76,6 +77,7 @@ public class ProdutoServices {
 
     public Produto cadastrarProduto(Produto produto) {
         produto.setProId(null);
+        
         return this.produtoRepository.save(produto);
     }
 

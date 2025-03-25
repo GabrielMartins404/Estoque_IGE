@@ -1,11 +1,8 @@
 package com.estoqueige.estoqueige.services;
 
-import com.estoqueige.estoqueige.EstoqueIgeApplication;
-import com.estoqueige.estoqueige.controllers.FaculdadeController;
 import com.estoqueige.estoqueige.models.Usuario;
 import com.estoqueige.estoqueige.models.enums.PerfisUsuario;
 import com.estoqueige.estoqueige.repositories.UsuarioRepository;
-import com.estoqueige.estoqueige.security.JWTutil;
 import com.estoqueige.estoqueige.security.UserSpringSecurity;
 import com.estoqueige.estoqueige.services.exceptions.ErroAoBuscarObjetos;
 import com.estoqueige.estoqueige.services.exceptions.ErroAutorizacao;
@@ -101,8 +98,22 @@ public class UsuarioServices {
     public Usuario atualizarUsuario(Usuario usuario) {
         Usuario newUsuario = this.buscarUsuarioPorId(usuario.getUsuId());
 
-        //Copio todas as propriedades do usuario para newUsuario, menos o ID
-        BeanUtils.copyProperties(usuario, newUsuario, "reqId");
+        if (usuario.getUsuNome() != null && !usuario.getUsuNome().isBlank()) {
+            newUsuario.setUsuNome(usuario.getUsuNome());
+        }
+        
+        if (usuario.getUsuPerfil() != null) {
+            newUsuario.setUsuPerfil(usuario.getUsuPerfil());
+        }
+        
+        if (usuario.getUsuSenha() != null && !usuario.getUsuSenha().isBlank()) {
+            newUsuario.setUsuSenha(this.bCryptPasswordEncoder.encode(usuario.getUsuSenha()));
+        }
+        
+        if (usuario.getIsAtivo() != null) {
+            newUsuario.setIsAtivo(usuario.getIsAtivo());
+        }
+
         this.usuarioRepository.save(newUsuario);
 
         return newUsuario;

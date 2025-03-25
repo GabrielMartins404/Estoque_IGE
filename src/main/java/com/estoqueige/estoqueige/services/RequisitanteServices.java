@@ -3,6 +3,7 @@ package com.estoqueige.estoqueige.services;
 import com.estoqueige.estoqueige.models.Requisitante;
 import com.estoqueige.estoqueige.repositories.RequisitanteRepository;
 import com.estoqueige.estoqueige.services.exceptions.ErroAoBuscarObjetos;
+import com.estoqueige.estoqueige.services.exceptions.ErroValidacaoLogica;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
@@ -42,6 +43,9 @@ public class RequisitanteServices {
 
         //Copio todas as propriedades do requisitante para newRequisitante, menos o ID
         BeanUtils.copyProperties(requisitante, newRequisitante, "reqId");
+        if(requisitante.getFacRequisitante().getIsAtivo()){
+            throw new ErroValidacaoLogica("Não é possível cadastrar requisitante com faculdade inativa");
+        }
         this.requisitanteRepository.save(newRequisitante);
 
         return newRequisitante;

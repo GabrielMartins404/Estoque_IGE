@@ -13,7 +13,7 @@ import com.estoqueige.estoqueige.security.UserSpringSecurity;
 import com.estoqueige.estoqueige.services.exceptions.ErroAoBuscarObjetos;
 import com.estoqueige.estoqueige.services.exceptions.ErroAutorizacao;
 import com.estoqueige.estoqueige.services.exceptions.ErroMovimentacaoCancelada;
-import com.estoqueige.estoqueige.services.exceptions.ErroProduto;
+import com.estoqueige.estoqueige.services.exceptions.ErroValidacaoLogica;
 
 import jakarta.transaction.Transactional;
 
@@ -131,7 +131,7 @@ public class MovimentacaoServices {
         for (ProdutoMovimentacao produtoMovimentacao : movimentacao.getProdutosMov()) {
             //Valido se a quantidade inserida é maior que zero
             if(produtoMovimentacao.getProMovQtdProduto() < 0){
-                throw new ErroProduto("Não é possível realizar movimentação com quantidade negativa.");
+                throw new ErroValidacaoLogica("Não é possível realizar movimentação com quantidade negativa.");
             }else{    
                 
                 Produto produto = this.produtoServices.buscarProdutoPorId(produtoMovimentacao.getProMovProduto().getProId());  
@@ -139,12 +139,14 @@ public class MovimentacaoServices {
                 if(produto.getIsAtivo()){
                     //Verifico aqui se o produto tem estoque disponível para dar saída 
                     if((produtoMovimentacao.getProMovQtdProduto() > produto.getProQtd()) && (movimentacao.getMovTipo() == MovTipo.SAIDA)){
-                        throw new ErroProduto("O produto '" +produto.getProNome()+ "' não possui estoque suficiente para concluir a saida");
+                        throw new ErroValidacaoLogica("O produto '" +produto.getProNome()+ "' não possui estoque suficiente para concluir a saida");
+                    }else if(!produtoMovimentacao.getProMovProduto().getIsAtivo()){ //Verifico se o produto está ativo
+                        throw new ErroValidacaoLogica("O produto '" +produto.getProNome()+ "' está inativo e não pode ser movimentado");
                     }else{
                         produtoMovimentacao.setProMovMovimentacao(movimentacao);
                     }    
                 }else{
-                    throw new ErroProduto("Produto "+produto.getProNome()+" está inativo e não pode ser movimentado!");
+                    throw new ErroValidacaoLogica("Produto "+produto.getProNome()+" está inativo e não pode ser movimentado!");
                 }
                 
             }
