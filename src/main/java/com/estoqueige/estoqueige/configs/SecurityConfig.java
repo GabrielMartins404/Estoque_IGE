@@ -7,6 +7,7 @@ import com.estoqueige.estoqueige.security.JWTAuthorizationFilter;
 import com.estoqueige.estoqueige.security.JWTutil;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -64,14 +65,15 @@ public class SecurityConfig {
         this.authenticationManager = authenticationManagerBuilder.build();
 
         http
-            .cors(cors -> cors.disable())
-            .csrf(csrf -> csrf.disable())
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
-                .requestMatchers(PUBLIC_MATCHERS).permitAll()
-                .anyRequest().authenticated())
-                .authenticationManager(authenticationManager);
+        .cors(cors -> cors.configurationSource(corsConfigurationSource())) // ✅ Habilita CORS corretamente
+        .csrf(csrf -> csrf.disable())
+        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // ✅ Libera preflight
+            .requestMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
+            .requestMatchers(PUBLIC_MATCHERS).permitAll()
+            .anyRequest().authenticated())
+            .authenticationManager(authenticationManager);
 
         http
             .addFilter(new JWTAuthenticationFilter(this.authenticationManager, this.jwtUtil));
@@ -83,10 +85,14 @@ public class SecurityConfig {
     }
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource(){
-        CorsConfiguration configuration = new CorsConfiguration().applyPermitDefaultValues();
-        configuration.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE"));
-        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:3000")); // ✅ Origem específica
+        configuration.setAllowedMethods(List.of("POST", "GET", "PUT", "DELETE", "OPTIONS")); // ✅ Inclui OPTIONS
+        configuration.setAllowedHeaders(List.of("*")); // ✅ Todos os headers
+        configuration.setAllowCredentials(true); // ✅ Permite credenciais
+        
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
