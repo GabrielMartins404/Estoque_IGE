@@ -14,6 +14,7 @@ public class ProdutoDto {
     private String proNome;
     private String proSipac;
     private String proUn;
+    private Long proUnId;
     private Float proQtd;
     private Float proEstoqueMin;
     private Boolean isAbaixoMin;

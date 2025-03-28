@@ -50,6 +50,7 @@ public class ProdutoServices {
             produto.getProNome(),
             produto.getProSipac(),
             produto.getUnProduto().getUnSigla(),
+            produto.getUnProduto().getUnId(),
             produto.getProQtd(),
             produto.getProEstoqueMin(),
             produto.getIsAbaixoMin(),
