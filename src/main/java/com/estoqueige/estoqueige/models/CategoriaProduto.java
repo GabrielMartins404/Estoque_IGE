@@ -1,3 +1,4 @@
+
 package com.estoqueige.estoqueige.models;
 
 import java.util.ArrayList;
@@ -25,33 +26,29 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = UnidadeProduto.TABLE_NAME)
+@Table(name = CategoriaProduto.TABLE_NAME)
 @AllArgsConstructor //Função que gera o construtor vazio
 @NoArgsConstructor //Função que gera o contrutor com todos os argumentos
 @Getter //Função que gera os get
 @Setter //Função que gera os set
 @EqualsAndHashCode //Função que gera o equals e HashCode
-public class UnidadeProduto {
-    public static final String TABLE_NAME = "unidadeProduto";
+public class CategoriaProduto {
+    public static final String TABLE_NAME = "categoriaProduto";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "unId", unique = true)
-    private Long unId;
+    @Column(name = "catProId", unique = true)
+    private Long catProId;
 
-    @Column(name = "unNome", length = 50, nullable = false)
-    @NotBlank(message = "O nome da unidade não pode ser nulo nem vazio")
-    private String unNome;
-
-    @Column(name = "unSigla", length = 10, nullable = false)
-    @NotBlank(message = "A sigla da unidade não pode ser nulo nem vazio")
-    private String unSigla;
+    @Column(name = "catProNome", length = 50, nullable = false)
+    @NotBlank(message = "O nome da categoria não pode ser nulo nem vazio")
+    private String catProNome;
 
     @Column(name = "isAtivo", columnDefinition = "TINYINT(1) DEFAULT 1")
     private Boolean isAtivo = true;
 
     /* Anotações das chaves estrangeiras */
-    @OneToMany(mappedBy = "proUn")
+    @OneToMany(mappedBy = "proCategoria")
     //@JsonBackReference
     @JsonProperty(access = Access.WRITE_ONLY)
     private List<Produto> produtos = new ArrayList<>(); 

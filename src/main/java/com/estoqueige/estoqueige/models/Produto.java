@@ -11,6 +11,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 @Entity
 @Table(name = Produto.TABLE_NAME)
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode
@@ -46,6 +48,12 @@ public class Produto {
     @NotBlank(message = "O código SIPAC do produto não pode ser vazio e nem nulo")
     private String proSipac;
 
+    @Column(name = "proDescricao", columnDefinition = "TEXT", nullable = true)
+    private String proDescricao;
+
+    @Column(name = "proCusto", nullable = false, columnDefinition = "FLOAT DEFAULT 0")
+    private Float proCusto = 0f;
+
     @Column(name = "proQtd", nullable = false, columnDefinition = "FLOAT DEFAULT 0")
     @NotNull
     private Float proQtd;
@@ -61,8 +69,12 @@ public class Produto {
 
     /* Definição das chaves estrangeiras */
     @ManyToOne
-    @JoinColumn(name = "unProduto", nullable = false)
-    private UnidadeProduto unProduto;
+    @JoinColumn(name = "proUn", nullable = false)
+    private UnidadeProduto proUn;
+
+    @ManyToOne
+    @JoinColumn(name = "proCategoria", nullable = true)
+    private CategoriaProduto proCategoria;
 
     @OneToMany(mappedBy = "proMovProduto")
     @JsonProperty(access = Access.WRITE_ONLY)
@@ -74,18 +86,6 @@ public class Produto {
 
     @OneToMany(mappedBy = "movEstProduto")
     private List<MovimentacaoEstoque> movimentacaoEstoque = new ArrayList<>();
-
-    public Produto(Long proId, String proNome, String proSipac, Float proQtd, Float proEstoqueMin, Boolean isAtivo, List<MovimentacaoEstoque> movimentacaoEstoque) {
-        this.proId = proId;
-        this.proNome = proNome;
-        this.proSipac = proSipac;
-        this.proQtd = proQtd;
-        this.proEstoqueMin = proEstoqueMin;
-        this.isAtivo = isAtivo;
-        this.movimentacaoEstoque = new ArrayList<>();
-        this.produtoMovimentacoes = new ArrayList<>();
-        this.produtoRequisicoes = new ArrayList<>();
-    }
 
     
 }

@@ -49,6 +49,12 @@ public class Movimentacao {
     @Column(name = "movId", unique = true)
     private Long movId;
 
+    @Column(name = "movNf", nullable = true)
+    private Long movNf;
+
+    @Column(name = "movNumRequisicao", nullable = true)
+    private Long movNumRequisicao;
+
     @Column(name = "movData", nullable = false)
     private LocalDate movData;
 
