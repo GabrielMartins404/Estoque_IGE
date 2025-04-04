@@ -12,7 +12,6 @@ import com.estoqueige.estoqueige.repositories.UnidadeProdutoRepository;
 import com.estoqueige.estoqueige.services.exceptions.ErroAoBuscarObjetos;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
