@@ -44,10 +44,14 @@ public class UnidadeProdutoController {
 
     @PostMapping("/")
     public ResponseEntity<UnidadeProduto> criarUnidadeProduto(@Valid @RequestBody UnidadeProduto unidadeProduto){
-        this.unidadeProdutoServices.cadastrarUnidadeProduto(unidadeProduto);
+        UnidadeProduto unidadeSalva = this.unidadeProdutoServices.cadastrarUnidadeProduto(unidadeProduto);
         
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{idUnidadeProduto}").buildAndExpand(unidadeProduto.getUnId()).toUri();
-        return ResponseEntity.created(uri).build();
+        URI uri = ServletUriComponentsBuilder
+            .fromCurrentRequest()
+            .path("/{idUnidadeProduto}")
+            .buildAndExpand(unidadeSalva.getUnId())
+            .toUri();
+        return ResponseEntity.created(uri).body(unidadeSalva);
     }
 
     @PutMapping("/{idUnidadeProduto}")

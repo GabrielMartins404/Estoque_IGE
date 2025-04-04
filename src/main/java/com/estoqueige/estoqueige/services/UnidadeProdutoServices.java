@@ -27,7 +27,7 @@ public class UnidadeProdutoServices {
     }
 
     public List<UnidadeProduto> buscarTodasUnidadeProdutos(){
-        List<UnidadeProduto> unidadeProdutos = this.unidadeProdutoRepository.findAll();
+        List<UnidadeProduto> unidadeProdutos = this.unidadeProdutoRepository.buscarUnidadesAtivas();
         return unidadeProdutos;
     }
 

@@ -44,18 +44,18 @@ public class ProdutoController {
     }
 
     @PostMapping(value = "/",  consumes = "application/json")
-    public ResponseEntity<Produto> criarProduto(@Valid @RequestBody Produto produto){
-        this.produtoServices.cadastrarProduto(produto);
+    public ResponseEntity<ProdutoDto> criarProduto(@Valid @RequestBody Produto produto){
+        ProdutoDto produtoCriado = this.produtoServices.cadastrarProduto(produto);
         
         URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
         .path("/{idProduto}")
         .buildAndExpand(produto.getProId())
-        .toUri();;
-        return ResponseEntity.created(uri).build();
+        .toUri();
+        return ResponseEntity.created(uri).body(produtoCriado);
     }
 
     @PutMapping("/{idProduto}")
-    public ResponseEntity<Produto> atualizarProduto(@Valid @RequestBody Produto produto, @PathVariable Long idProduto){
+    public ResponseEntity<ProdutoDto> atualizarProduto(@Valid @RequestBody Produto produto, @PathVariable Long idProduto){
         produto.setProId(idProduto);
         return ResponseEntity.ok(this.produtoServices.atualizarProduto(produto));
     }
