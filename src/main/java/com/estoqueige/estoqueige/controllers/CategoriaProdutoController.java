@@ -44,10 +44,10 @@ public class CategoriaProdutoController {
 
     @PostMapping("/")
     public ResponseEntity<CategoriaProduto> criarCategoriaProduto(@Valid @RequestBody CategoriaProduto categoriaProduto){
-        this.categoriaProdutoServices.cadastrarCategoriaProduto(categoriaProduto);
+        CategoriaProduto categoria = this.categoriaProdutoServices.cadastrarCategoriaProduto(categoriaProduto);
         
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{idCategoriaProduto}").buildAndExpand(categoriaProduto.getCatProId()).toUri();
-        return ResponseEntity.created(uri).build();
+        return ResponseEntity.created(uri).body(categoria);
     }
 
     @PutMapping("/{idCategoriaProduto}")

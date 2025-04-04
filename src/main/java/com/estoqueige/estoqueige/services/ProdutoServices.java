@@ -12,6 +12,7 @@ import com.estoqueige.estoqueige.repositories.UnidadeProdutoRepository;
 import com.estoqueige.estoqueige.services.exceptions.ErroAoBuscarObjetos;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,14 +22,14 @@ import java.util.Optional;
 @Service
 public class ProdutoServices {
 
-    private final CategoriaProdutoRepository categoriaProdutoRepository;
+    private final CategoriaProdutoServices categoriaProdutoServices;
     private final ProdutoRepository produtoRepository;
-    private final UnidadeProdutoRepository unidadeProdutoRepository;
+    private final UnidadeProdutoServices unidadeProdutoServices;
     
-    public ProdutoServices(ProdutoRepository produtoRepository, CategoriaProdutoRepository categoriaProdutoRepository, UnidadeProdutoRepository unidadeProdutoRepository) {
+    public ProdutoServices(ProdutoRepository produtoRepository, UnidadeProdutoServices unidadeProdutoServices, CategoriaProdutoServices categoriaProdutoServices) {
         this.produtoRepository = produtoRepository;
-        this.categoriaProdutoRepository = categoriaProdutoRepository;
-        this.unidadeProdutoRepository = unidadeProdutoRepository;
+        this.unidadeProdutoServices = unidadeProdutoServices;
+        this.categoriaProdutoServices = categoriaProdutoServices;
     }
 
 
@@ -60,24 +61,38 @@ public class ProdutoServices {
 
         //Há vezes em que a categoria e unidade não vem no produto. Desse modo, é preciso busca-las
         //Depois vou reavaliar se realmente essas duas buscas valem a pena ou se obrigo passar os dados completos no produto (atualmente os produtos podem vir sem o nome da unidade e categoria)
-        Optional<CategoriaProduto> categoria = this.categoriaProdutoRepository.findById(produto.getProCategoria().getCatProId());
-        Optional<UnidadeProduto> unidade = this.unidadeProdutoRepository.findById(produto.getProUn().getUnId());
+        // Busca a categoria no banco se existir ID
+        String catProNome = null;
+        Long catProId = null;
+        if (produto.getProCategoria() != null && produto.getProCategoria().getCatProId() != null) {
+            CategoriaProduto categoria = categoriaProdutoServices.buscarCategoriaProdutoPorId(produto.getProCategoria().getCatProId());
+                catProNome = categoria.getCatProNome();
+                catProId = categoria.getCatProId();
+        }
 
-        ProdutoDto produtoDto = new ProdutoDto(
+        // Busca a unidade no banco se existir ID
+        String unSigla = null;
+        Long unId = null;
+        if (produto.getProUn() != null && produto.getProUn().getUnId() != null) {
+            UnidadeProduto unidadeOpt = unidadeProdutoServices.buscarUnidadeProdutoPorId(produto.getProUn().getUnId());
+            unSigla = unidadeOpt.getUnSigla();
+            unId = unidadeOpt.getUnId();
+        }
+
+        // Constrói o DTO
+        return new ProdutoDto(
             produto.getProId(),
             produto.getProNome(),
             produto.getProSipac(),
-            unidade.get().getUnSigla(),
-            produto.getProUn() != null ? produto.getProUn().getUnId() : null,
-            categoria.get().getCatProNome(),
-            produto.getProCategoria() != null ? produto.getProCategoria().getCatProId() : null,
+            unSigla,
+            unId,
+            catProNome,
+            catProId,
             produto.getProQtd(),
             produto.getProEstoqueMin(),
             produto.getIsAbaixoMin(),
             produto.getIsAtivo()
         );
-        
-        return produtoDto;
     }
 
     public Produto buscarProdutoPorId(Long id) {
@@ -98,6 +113,11 @@ public class ProdutoServices {
 
     public ProdutoDto cadastrarProduto(Produto produto) {
         produto.setProId(null);
+        if (produto.getProCategoria() == null 
+            || produto.getProCategoria().getCatProId() == null 
+            || produto.getProCategoria().getCatProId() <= 0) {
+            produto.setProCategoria(null);
+        }
         Produto ProdutoCadastrado = this.produtoRepository.save(produto);
         return gerarProdutoDto(ProdutoCadastrado);
     }
@@ -106,6 +126,11 @@ public class ProdutoServices {
         Produto newProduto = this.buscarProdutoPorId(produto.getProId());
 
         BeanUtils.copyProperties(produto, newProduto, "proId");
+        if (produto.getProCategoria() == null 
+            || produto.getProCategoria().getCatProId() == null 
+            || produto.getProCategoria().getCatProId() <= 0) {
+            produto.setProCategoria(null);
+        }
         newProduto.setProUn(produto.getProUn());
         newProduto.setProCategoria(produto.getProCategoria());
         this.produtoRepository.save(newProduto);

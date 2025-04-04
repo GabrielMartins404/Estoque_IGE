@@ -27,7 +27,7 @@ public class CategoriaProdutoServices {
     }
 
     public List<CategoriaProduto> buscarTodasCategoriaProdutos(){
-        List<CategoriaProduto> categoriaProduto = this.categoriaProdutoRepository.findAll();
+        List<CategoriaProduto> categoriaProduto = this.categoriaProdutoRepository.buscarCategoriasAtivas();
         return categoriaProduto;
     }
 
