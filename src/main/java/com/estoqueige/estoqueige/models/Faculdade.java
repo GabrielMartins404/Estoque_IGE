@@ -43,8 +43,11 @@ public class Faculdade {
     @NotBlank(message = "O nome da faculdade não pode ser nulo nem vazio")
     private String facNome;
 
-    @Column(name = "isAtivo", columnDefinition = "TINYINT(1) DEFAULT 1")
-    private Boolean isAtivo;
+    @Column(name = "facSigla", length = 20, nullable = true)
+    private String facSigla;
+
+    @Column(name = "isAtivo", columnDefinition = "TINYINT(1) DEFAULT 1", nullable = false)
+    private Boolean isAtivo = true;
 
     /* Anotações das chaves estrangeiras */
     @OneToMany(mappedBy = "facRequisitante")

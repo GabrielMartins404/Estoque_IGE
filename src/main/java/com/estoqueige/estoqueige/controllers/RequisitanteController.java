@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.estoqueige.estoqueige.dto.RequisitanteDto;
 import com.estoqueige.estoqueige.models.Requisitante;
 import com.estoqueige.estoqueige.services.RequisitanteServices;
 
@@ -38,21 +39,21 @@ public class RequisitanteController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<Requisitante>> buscarRequisitantes() {
-        List<Requisitante> requisitantes = this.requisitanteServices.buscarTodosRequisitantes();
+    public ResponseEntity<List<RequisitanteDto>> buscarRequisitantes() {
+        List<RequisitanteDto> requisitantes = this.requisitanteServices.buscarTodosRequisitantes();
         return ResponseEntity.ok().body(requisitantes);
     }
 
     @PostMapping("/")
-    public ResponseEntity<Requisitante> criarRequisitante(@Valid @RequestBody Requisitante requisitante){
-        this.requisitanteServices.cadastrarRequisitante(requisitante);
+    public ResponseEntity<RequisitanteDto> criarRequisitante(@Valid @RequestBody Requisitante requisitante){
+        RequisitanteDto requisitanteCriado = this.requisitanteServices.cadastrarRequisitante(requisitante);
         
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{idRequisitante}").buildAndExpand(requisitante.getReqId()).toUri();
-        return ResponseEntity.created(uri).build();
+        return ResponseEntity.created(uri).body(requisitanteCriado);
     }
 
     @PutMapping("/{idRequisitante}")
-    public ResponseEntity<Requisitante> atualizarRequisitante(@Valid @RequestBody Requisitante requisitante, @PathVariable Long idRequisitante){
+    public ResponseEntity<RequisitanteDto> atualizarRequisitante(@Valid @RequestBody Requisitante requisitante, @PathVariable Long idRequisitante){
         requisitante.setReqId(idRequisitante);
         return ResponseEntity.ok(this.requisitanteServices.atualizarRequisitante(requisitante));
     }

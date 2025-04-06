@@ -44,10 +44,10 @@ public class FaculdadeController {
 
     @PostMapping("/")
     public ResponseEntity<Faculdade> criarFaculdade(@Valid @RequestBody Faculdade faculdade){
-        this.faculdadeServices.cadastrarFaculdade(faculdade);
+        Faculdade faculdadeCriada = this.faculdadeServices.cadastrarFaculdade(faculdade);
         
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{idFaculdade}").buildAndExpand(faculdade.getFacId()).toUri();
-        return ResponseEntity.created(uri).build();
+        return ResponseEntity.created(uri).body(faculdadeCriada);
     }
 
     @PutMapping("/{idFaculdade}")

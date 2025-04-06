@@ -83,6 +83,7 @@ public class ProdutoServices {
             produto.getProId(),
             produto.getProNome(),
             produto.getProSipac(),
+            produto.getProDescricao(),
             unSigla,
             unId,
             catProNome,
@@ -112,10 +113,16 @@ public class ProdutoServices {
 
     public ProdutoDto cadastrarProduto(Produto produto) {
         produto.setProId(null);
+        
+        //Verifico se o produto tem categoria inserido
         if (produto.getProCategoria() == null 
             || produto.getProCategoria().getCatProId() == null 
             || produto.getProCategoria().getCatProId() <= 0) {
             produto.setProCategoria(null);
+        }
+        //Verificar sempre que for atualizar, se o estoque ficou abaixo do minimo
+        if(produto.getProQtd() < produto.getProEstoqueMin()){
+            produto.setIsAbaixoMin(true);
         }
         Produto ProdutoCadastrado = this.produtoRepository.save(produto);
         return gerarProdutoDto(ProdutoCadastrado);
@@ -129,6 +136,10 @@ public class ProdutoServices {
             || produto.getProCategoria().getCatProId() == null 
             || produto.getProCategoria().getCatProId() <= 0) {
             produto.setProCategoria(null);
+        }
+
+        if(produto.getProQtd() < produto.getProEstoqueMin()){
+            newProduto.setIsAbaixoMin(true);
         }
         newProduto.setProUn(produto.getProUn());
         newProduto.setProCategoria(produto.getProCategoria());

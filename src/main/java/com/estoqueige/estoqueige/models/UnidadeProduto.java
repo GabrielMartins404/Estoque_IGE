@@ -47,7 +47,7 @@ public class UnidadeProduto {
     @NotBlank(message = "A sigla da unidade não pode ser nulo nem vazio")
     private String unSigla;
 
-    @Column(name = "isAtivo", columnDefinition = "TINYINT(1) DEFAULT 1")
+    @Column(name = "isAtivo", columnDefinition = "TINYINT(1) DEFAULT 1", nullable = false)
     private Boolean isAtivo = true;
 
     /* Anotações das chaves estrangeiras */

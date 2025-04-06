@@ -50,9 +50,9 @@ public class Usuario {
     @JsonProperty(access = Access.WRITE_ONLY)
     private String usuSenha;
 
-    @Column(name = "isAtivo", columnDefinition = "TINYINT(1) DEFAULT 1")
+    @Column(name = "isAtivo", columnDefinition = "TINYINT(1) DEFAULT 1", nullable = false)
     @NotNull
-    private Boolean isAtivo;
+    private Boolean isAtivo = true;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "usuPerfil", nullable = false)

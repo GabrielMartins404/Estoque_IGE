@@ -1,5 +1,6 @@
 package com.estoqueige.estoqueige.services;
 
+import com.estoqueige.estoqueige.dto.RequisitanteDto;
 import com.estoqueige.estoqueige.models.Requisitante;
 import com.estoqueige.estoqueige.repositories.RequisitanteRepository;
 import com.estoqueige.estoqueige.services.exceptions.ErroAoBuscarObjetos;
@@ -9,6 +10,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,34 +23,61 @@ public class RequisitanteServices {
     }
 
     /* Método services */
+    public RequisitanteDto gerarRequisitanteDto(Requisitante requisitante){
+
+        RequisitanteDto requisitanteDto = new RequisitanteDto();
+
+        requisitanteDto.setReqNome(requisitante.getReqNome());
+        requisitanteDto.setIsAtivo(requisitante.getIsAtivo());
+        requisitanteDto.setReqId(requisitante.getReqId());
+
+        if(requisitante.getFacRequisitante() != null){
+            requisitanteDto.setReqFacNome(requisitante.getFacRequisitante().getFacNome());
+            requisitanteDto.setReqFacSigla(requisitante.getFacRequisitante().getFacSigla());
+            requisitanteDto.setReqFaqId(requisitante.getFacRequisitante().getFacId());;
+            
+        }
+        return requisitanteDto;
+    }
+
     public Requisitante buscarRequisitantePorId(Long id) {
         Optional<Requisitante> requisitante = this.requisitanteRepository.findById(id);
         return requisitante.orElseThrow(() -> new ErroAoBuscarObjetos("Não foi possivel encontrar o requisitante com id: "+id));
     }
 
-    public List<Requisitante> buscarTodosRequisitantes() {
-        List<Requisitante> requisitantes = this.requisitanteRepository.findAll();
-        return requisitantes;
+    public List<RequisitanteDto> buscarTodosRequisitantes() {
+        List<Requisitante> requisitantes = this.requisitanteRepository.buscarRequisitantesAtivos();
+        
+        List<RequisitanteDto> requisitanteDtos = new ArrayList<>();
+        for (Requisitante requisitante : requisitantes) {
+            requisitanteDtos.add(gerarRequisitanteDto(requisitante));
+        }
+        return requisitanteDtos;
     }
 
     @Transactional
-    public Requisitante cadastrarRequisitante(Requisitante requisitante) {
+    public RequisitanteDto cadastrarRequisitante(Requisitante requisitante) {
         requisitante.setReqId(null);
-        return this.requisitanteRepository.save(requisitante);
+        if (requisitante.getFacRequisitante() == null || requisitante.getFacRequisitante().getFacId() == null || requisitante.getFacRequisitante().getFacId() == 0) {
+            requisitante.setFacRequisitante(null);
+        }
+        return gerarRequisitanteDto(this.requisitanteRepository.save(requisitante));
     }
 
     @Transactional
-    public Requisitante atualizarRequisitante(Requisitante requisitante) {
+    public RequisitanteDto atualizarRequisitante(Requisitante requisitante) {
         Requisitante newRequisitante = this.buscarRequisitantePorId(requisitante.getReqId());
-
+        //Nem sempre, quando inserir o requisitante haverá os dados 
+        
+        if (requisitante.getFacRequisitante() == null || requisitante.getFacRequisitante().getFacId() == null || requisitante.getFacRequisitante().getFacId() == 0) {
+            requisitante.setFacRequisitante(null);
+        }
         //Copio todas as propriedades do requisitante para newRequisitante, menos o ID
         BeanUtils.copyProperties(requisitante, newRequisitante, "reqId");
-        if(requisitante.getFacRequisitante().getIsAtivo()){
-            throw new ErroValidacaoLogica("Não é possível cadastrar requisitante com faculdade inativa");
-        }
+        
         this.requisitanteRepository.save(newRequisitante);
 
-        return newRequisitante;
+        return gerarRequisitanteDto(newRequisitante);
     }
 
     @Transactional

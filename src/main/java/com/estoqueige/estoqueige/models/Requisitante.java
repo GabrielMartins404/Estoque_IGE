@@ -36,9 +36,9 @@ public class Requisitante {
     @NotBlank(message = "O nome do requisitante não pode ser vazio e nem nulo")
     private String reqNome;
 
-    @Column(name = "isAtivo", columnDefinition = "TINYINT(1) DEFAULT 1")
+    @Column(name = "isAtivo", columnDefinition = "TINYINT(1) DEFAULT 1", nullable = false)
     @NotNull
-    private Boolean isAtivo;
+    private Boolean isAtivo = true;
 
     /* Anotações das chaves estrangeiras */
     @ManyToOne

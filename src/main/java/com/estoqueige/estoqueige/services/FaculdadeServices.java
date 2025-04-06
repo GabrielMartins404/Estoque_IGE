@@ -27,7 +27,7 @@ public class FaculdadeServices {
     }
 
     public List<Faculdade> buscarTodasFaculdades(){
-        List<Faculdade> faculdades = this.faculdadeRepository.findAll();
+        List<Faculdade> faculdades = this.faculdadeRepository.buscarFaculdadesAtivas();
         return faculdades;
     }
 

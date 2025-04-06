@@ -64,7 +64,7 @@ public class Produto {
     @Column(name = "isAbaixoMin", nullable = true, columnDefinition = "TINYINT(1) DEFAULT 0")
     private Boolean isAbaixoMin = false;
 
-    @Column(name = "isAtivo", columnDefinition = "TINYINT(1) DEFAULT 1")
+    @Column(name = "isAtivo", columnDefinition = "TINYINT(1) DEFAULT 1", nullable = false)
     private Boolean isAtivo = true;
 
     /* Definição das chaves estrangeiras */

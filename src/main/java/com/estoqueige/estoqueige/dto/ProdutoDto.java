@@ -13,6 +13,7 @@ public class ProdutoDto {
     private Long proId;
     private String proNome;
     private String proSipac;
+    private String proDescricao;
     private String proUn;
     private Long proUnId;
     private String proCategoria;
