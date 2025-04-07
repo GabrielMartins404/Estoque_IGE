@@ -44,10 +44,10 @@ public class UsuarioController {
 
     @PostMapping("/")
     public ResponseEntity<Usuario> criarUsuario(@Valid @RequestBody Usuario usuario){
-        this.usuarioServices.cadastrarUsuario(usuario);
+        Usuario usuarioCriado = this.usuarioServices.cadastrarUsuario(usuario);
         
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{idUsuario}").buildAndExpand(usuario.getUsuId()).toUri();
-        return ResponseEntity.created(uri).build();
+        return ResponseEntity.created(uri).body(usuarioCriado);
     }
 
     @PutMapping("/{idUsuario}")
@@ -59,6 +59,12 @@ public class UsuarioController {
     @PutMapping("/inativar/{idUsuario}")
     public ResponseEntity<Void> inativarUsuario(@Valid @PathVariable Long idUsuario){
         this.usuarioServices.alterarStatusAtivoUsuario(idUsuario);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/alterarSenha/{idUsuario}")
+    public ResponseEntity<Void> alterarSenhaUsuario(@Valid @PathVariable Long idUsuario, @RequestBody String senha){
+        this.usuarioServices.alterarSenhaDeUsuario(idUsuario, senha);
         return ResponseEntity.noContent().build();
     }
 }

@@ -34,7 +34,7 @@ public class UsuarioServices {
     }
 
     /* Método services */
-    public Boolean validarUsuario(String mensagem) {
+    public static Boolean validarUsuario(String mensagem) {
         UserSpringSecurity usuarioLogado = autenticado();
 
         // Verifica se o usuário está autenticado
@@ -68,7 +68,7 @@ public class UsuarioServices {
             return null;
         }
         
-        List<Usuario> usuarios = this.usuarioRepository.findAll();
+        List<Usuario> usuarios = this.usuarioRepository.buscarUsuariosAtivos();
         return usuarios;
         
     }
@@ -106,10 +106,6 @@ public class UsuarioServices {
             newUsuario.setUsuPerfil(usuario.getUsuPerfil());
         }
         
-        if (usuario.getUsuSenha() != null && !usuario.getUsuSenha().isBlank()) {
-            newUsuario.setUsuSenha(this.bCryptPasswordEncoder.encode(usuario.getUsuSenha()));
-        }
-        
         if (usuario.getIsAtivo() != null) {
             newUsuario.setIsAtivo(usuario.getIsAtivo());
         }
@@ -117,6 +113,19 @@ public class UsuarioServices {
         this.usuarioRepository.save(newUsuario);
 
         return newUsuario;
+    }
+
+    public Usuario alterarSenhaDeUsuario(Long id, String senha){
+        if(!validarUsuario("Usuário não tem permissão para alterar senha de outros usuários")){
+            return null;
+        }
+        Usuario usuario = this.buscarUsuarioPorId(id);
+
+        if(senha != null && !senha.isBlank()){
+            usuario.setUsuSenha(this.bCryptPasswordEncoder.encode(senha));
+        }
+
+        return this.usuarioRepository.save(usuario);
     }
 
     @Transactional
@@ -128,8 +137,6 @@ public class UsuarioServices {
 
         usuario.setIsAtivo(!usuario.getIsAtivo());
         return this.usuarioRepository.save(usuario);   
-        
-        
     }
 
 
