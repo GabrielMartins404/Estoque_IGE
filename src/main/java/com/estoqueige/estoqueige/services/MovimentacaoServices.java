@@ -86,6 +86,7 @@ public class MovimentacaoServices {
     }
 
     //Esse método irá ser usado no frontEnd onde preciso que retorne somente uma movimentacao DTO
+    //Verifica se vai ser realmente necessário?
     public MovimentacaoDto retornarMovimentacaoDto(Long id){
         Movimentacao movimentacao = this.buscarMovimentacaoPorId(id);
         MovimentacaoDto movimentacaoDto = gerarMovimentacaoDto(movimentacao);
