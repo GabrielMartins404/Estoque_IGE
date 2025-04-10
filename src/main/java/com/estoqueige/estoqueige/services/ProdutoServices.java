@@ -10,6 +10,7 @@ import com.estoqueige.estoqueige.repositories.CategoriaProdutoRepository;
 import com.estoqueige.estoqueige.repositories.ProdutoRepository;
 import com.estoqueige.estoqueige.repositories.UnidadeProdutoRepository;
 import com.estoqueige.estoqueige.services.exceptions.ErroAoBuscarObjetos;
+import com.estoqueige.estoqueige.services.exceptions.ErroValidacaoLogica;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -136,6 +137,10 @@ public class ProdutoServices {
             || produto.getProCategoria().getCatProId() == null 
             || produto.getProCategoria().getCatProId() <= 0) {
             produto.setProCategoria(null);
+        }
+
+        if(produto.getProEstoqueMin() < 0){
+            produto.setProEstoqueMin(0f);
         }
 
         if(produto.getProQtd() < produto.getProEstoqueMin()){
