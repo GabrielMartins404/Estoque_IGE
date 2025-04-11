@@ -1,12 +1,9 @@
 package com.estoqueige.estoqueige.configs;
 
-import com.estoqueige.estoqueige.EstoqueIgeApplication;
-import com.estoqueige.estoqueige.controllers.FaculdadeController;
 import com.estoqueige.estoqueige.security.JWTAuthenticationFilter;
 import com.estoqueige.estoqueige.security.JWTAuthorizationFilter;
 import com.estoqueige.estoqueige.security.JWTutil;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +47,8 @@ public class SecurityConfig {
 
     private static final String[] PUBLIC_MATCHERS_POST = {
         "/login",
-        "/usuario/"
+        "/usuario/",
+        "/auth/validarToken"
     };
 
     @Bean
@@ -76,10 +74,10 @@ public class SecurityConfig {
             .authenticationManager(authenticationManager);
 
         http
-            .addFilter(new JWTAuthenticationFilter(this.authenticationManager, this.jwtUtil));
+            .addFilter(new JWTAuthenticationFilter(this.authenticationManager, this.jwtUtil)); //Aqui é onde gera o token após o login do sistema
         
         http
-            .addFilter(new JWTAuthorizationFilter(this.authenticationManager, this.jwtUtil, this.userDetailsService));
+            .addFilter(new JWTAuthorizationFilter(this.authenticationManager, this.jwtUtil, this.userDetailsService)); //Aqui é verificado se o token é valido para qualquer outra requisição
         
         return http.build();
     }
@@ -87,10 +85,10 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000")); // ✅ Origem específica
-        configuration.setAllowedMethods(List.of("POST", "GET", "PUT", "DELETE", "OPTIONS")); // ✅ Inclui OPTIONS
-        configuration.setAllowedHeaders(List.of("*")); // ✅ Todos os headers
-        configuration.setAllowCredentials(true); // ✅ Permite credenciais
+        configuration.setAllowedOrigins(List.of("http://localhost:3000")); // Origem específica
+        configuration.setAllowedMethods(List.of("POST", "GET", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*")); // Todos os headers
+        configuration.setAllowCredentials(true); // Permite credenciais
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

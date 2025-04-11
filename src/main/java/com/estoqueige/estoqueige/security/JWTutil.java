@@ -20,29 +20,14 @@ import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JWTutil {
-
-    private final FaculdadeRepository faculdadeRepository;
-
-    private final FaculdadeController faculdadeController;
-
-    private final EstoqueIgeApplication estoqueIgeApplication;
-
-    private final CorsConfigurationSource corsConfigurationSource;
-
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     @Value("${jwt.secret}")
     private String secret;
 
     @Value("${jwt.expiration}")
     private Long expiration;
 
-    JWTutil(BCryptPasswordEncoder bCryptPasswordEncoder, CorsConfigurationSource corsConfigurationSource, EstoqueIgeApplication estoqueIgeApplication, FaculdadeController faculdadeController, FaculdadeRepository faculdadeRepository) {
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.corsConfigurationSource = corsConfigurationSource;
-        this.estoqueIgeApplication = estoqueIgeApplication;
-        this.faculdadeController = faculdadeController;
-        this.faculdadeRepository = faculdadeRepository;
-    }
+    //Esse arquivo tem como função gerar o token de acordo com minha chave unica
+
     public String generateToken(UserSpringSecurity user) {
         SecretKey key = getKeyBySecret(); // Obtém a chave secreta
         

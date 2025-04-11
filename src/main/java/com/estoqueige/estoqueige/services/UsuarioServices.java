@@ -3,6 +3,7 @@ package com.estoqueige.estoqueige.services;
 import com.estoqueige.estoqueige.models.Usuario;
 import com.estoqueige.estoqueige.models.enums.PerfisUsuario;
 import com.estoqueige.estoqueige.repositories.UsuarioRepository;
+import com.estoqueige.estoqueige.security.JWTutil;
 import com.estoqueige.estoqueige.security.UserSpringSecurity;
 import com.estoqueige.estoqueige.services.exceptions.ErroAoBuscarObjetos;
 import com.estoqueige.estoqueige.services.exceptions.ErroAutorizacao;
@@ -25,6 +26,9 @@ public class UsuarioServices {
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder; //Aqui serve para criptografar
+
+    @Autowired
+    private JWTutil jwtUtil;
     
     private final UsuarioRepository usuarioRepository;
 
@@ -139,6 +143,24 @@ public class UsuarioServices {
         return this.usuarioRepository.save(usuario);   
     }
 
+    //Método para validar se o token repassado pelo Front ainda é valido
+    //Esse método pega o token passado e verifica sua validade no JWTutil
+    public Usuario validarToken(String tokenPassado){
+        if(tokenPassado != null && tokenPassado.startsWith("Bearer ")){ //Verifico se o token passado inicia com Bearer
+            String token = tokenPassado.substring(7);
+
+            if(this.jwtUtil.isValidToken(token)){ //Verifico se é valido no jwtUtil
+                String userName = jwtUtil.getUserName(token);
+                Optional<Usuario> usuario = this.usuarioRepository.findByUsuLogin(userName); //O token só é gerado se haver senha, desse modo, basta buscar pelo nome do usuário
+
+                if(usuario.isPresent()){
+                    return usuario.get();
+                }
+            }
+        }
+
+        return null;
+    }
 
 
     //Função serve para verificar se o usuário está autenticado

@@ -20,7 +20,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-//tudo que cair em login, vai ser usado nessa classe
+//Tudo que cair em login, vai ser usado nessa classe
+//A diferença para a AuthorizationFilter é que 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
     private AuthenticationManager authenticationManager;
     private JWTutil jwtUtil;
