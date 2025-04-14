@@ -78,8 +78,8 @@ public class MovimentacaoServices {
         movimentacaoDto.setMovOrigem(movimentacao.getMovOrigem());
         movimentacaoDto.setMovTipo(movimentacao.getMovTipo());
         movimentacaoDto.setMovStatus(movimentacao.getMovStatus());
-        movimentacaoDto.setMovRequisitante(movimentacao.getMovRequisitante());
-        movimentacaoDto.setMovUsuario(movimentacao.getMovUsuario());
+        movimentacaoDto.setMovRequisitante(movimentacao.getMovRequisitante().getReqNome());
+        movimentacaoDto.setMovUsuario(movimentacao.getMovUsuario().getUsuNome());
         movimentacaoDto.setProdutosMov(produtoMovimentacaoDtos);
         return movimentacaoDto;
         

@@ -42,9 +42,9 @@ public class MovimentacaoDto {
 
     private MovTipo movTipo;
 
-    private Usuario movUsuario;
+    private String movUsuario;
 
-    private Requisitante movRequisitante;
+    private String movRequisitante;
 
     private List<ProdutoMovimentacaoDto> produtosMov = null;
 

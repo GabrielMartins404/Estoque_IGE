@@ -42,8 +42,6 @@ public class UserDetailsImplServices implements UserDetailsService{
         }else{
             throw new ErroAutorizacao("Usuário está inativo e não possui permissão para acessar o sistema!");
         }
-        
-
     }
     
 }
