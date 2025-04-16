@@ -46,7 +46,7 @@ public class MovimentacaoDto {
 
     private String movRequisitante;
 
-    private List<ProdutoMovimentacaoDto> produtosMov = null;
+    private List<ProdutoMovimentacaoDto> proMovProduto = null;
 
     public MovimentacaoDto() {
     }

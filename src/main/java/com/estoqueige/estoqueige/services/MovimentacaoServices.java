@@ -80,7 +80,7 @@ public class MovimentacaoServices {
         movimentacaoDto.setMovStatus(movimentacao.getMovStatus());
         movimentacaoDto.setMovRequisitante(movimentacao.getMovRequisitante().getReqNome());
         movimentacaoDto.setMovUsuario(movimentacao.getMovUsuario().getUsuNome());
-        movimentacaoDto.setProdutosMov(produtoMovimentacaoDtos);
+        movimentacaoDto.setProMovProduto(produtoMovimentacaoDtos);
         return movimentacaoDto;
         
     }
@@ -101,8 +101,11 @@ public class MovimentacaoServices {
         return movimentacao;
     }
 
-    public List<MovimentacaoDto> buscarTodasMovimentacoes(){
-        List<Movimentacao> movimentacoes = this.movimentacaoRepository.findAll();
+    public List<MovimentacaoDto> buscarTodasMovimentacoes(String tipo, String status){
+        MovTipo movTipo = MovTipo.movTipo(tipo);
+        MovStatus movStatus = MovStatus.movStatus(status);
+
+        List<Movimentacao> movimentacoes = this.movimentacaoRepository.buscarMovimentacaosPorTipo(movTipo, movStatus);
         List<MovimentacaoDto> movimentacaoDtos = new ArrayList<>();
         
         for (Movimentacao movimentacao : movimentacoes) {

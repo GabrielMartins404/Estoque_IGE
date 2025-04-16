@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -37,8 +38,8 @@ public class MovimentacaoController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<MovimentacaoDto>> buscarMovimentacaos() {
-        List<MovimentacaoDto> movimentacao = this.movimentacaoServices.buscarTodasMovimentacoes();
+    public ResponseEntity<List<MovimentacaoDto>> buscarMovimentacaos(@RequestParam String tipo, @RequestParam String status) {
+        List<MovimentacaoDto> movimentacao = this.movimentacaoServices.buscarTodasMovimentacoes(tipo, status);
         return ResponseEntity.ok().body(movimentacao);
     }
 
