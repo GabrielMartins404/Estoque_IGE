@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.estoqueige.estoqueige.dto.AlterarSenhaDto;
 import com.estoqueige.estoqueige.models.Usuario;
 import com.estoqueige.estoqueige.services.UsuarioServices;
 
@@ -63,8 +64,14 @@ public class UsuarioController {
     }
 
     @PutMapping("/alterarSenha/{idUsuario}")
-    public ResponseEntity<Void> alterarSenhaUsuario(@Valid @PathVariable Long idUsuario, @RequestBody String senha){
-        this.usuarioServices.alterarSenhaDeUsuario(idUsuario, senha);
+    public ResponseEntity<Void> alterarSenhaUsuario(@Valid @PathVariable Long idUsuario, @RequestBody AlterarSenhaDto alterarSenhaDto){
+        this.usuarioServices.alterarSenhaDeUsuario(idUsuario, alterarSenhaDto.getNovaSenha(), alterarSenhaDto.getSenhaAntiga());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/resetarSenha/{idUsuario}")
+    public ResponseEntity<Void> resetarSenhaUsuario(@Valid @PathVariable Long idUsuario){
+        this.usuarioServices.resetarSenhaDeUsuario(idUsuario);
         return ResponseEntity.noContent().build();
     }
 }

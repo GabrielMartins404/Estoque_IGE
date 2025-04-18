@@ -44,11 +44,11 @@ public class MovimentacaoController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Movimentacao> criarMovimentacao(@Valid @RequestBody Movimentacao movimentacao){
-        this.movimentacaoServices.salvarMovimentacao(movimentacao);
+    public ResponseEntity<MovimentacaoDto> criarMovimentacao(@Valid @RequestBody Movimentacao movimentacao){
+        MovimentacaoDto movimentacaoDto = this.movimentacaoServices.salvarMovimentacao(movimentacao);
         
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{idMovimentacao}").buildAndExpand(movimentacao.getMovId()).toUri();
-        return ResponseEntity.created(uri).build();
+        return ResponseEntity.created(uri).body(movimentacaoDto);
     }
 
     @PutMapping("/cancelarMovimentacao/{idMovimentacao}")

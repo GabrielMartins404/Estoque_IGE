@@ -105,7 +105,10 @@ public class MovimentacaoServices {
         MovTipo movTipo = MovTipo.movTipo(tipo);
         MovStatus movStatus = MovStatus.movStatus(status);
 
-        List<Movimentacao> movimentacoes = this.movimentacaoRepository.buscarMovimentacaosPorTipo(movTipo, movStatus);
+        
+        // System.out.println("========== Tipo: "+ );
+        // System.out.println("========== Status: "+ );
+        List<Movimentacao> movimentacoes = this.movimentacaoRepository.buscarMovimentacaosPorTipo(movTipo.name(), movStatus.name());
         List<MovimentacaoDto> movimentacaoDtos = new ArrayList<>();
         
         for (Movimentacao movimentacao : movimentacoes) {
@@ -117,7 +120,7 @@ public class MovimentacaoServices {
 
     //Método para salvar a movimentação no Banco de Dados
     @Transactional
-    public void salvarMovimentacao(Movimentacao movimentacao) {
+    public MovimentacaoDto salvarMovimentacao(Movimentacao movimentacao) {
 
         //Puxar Usuario do Context
         UserSpringSecurity userSpringSecurity = UsuarioServices.autenticado();
@@ -163,6 +166,8 @@ public class MovimentacaoServices {
         for (ProdutoMovimentacao produtoMovimentacao: movimentacao.getProdutosMov()){
             movimentacaoEstoqueServices.salvarMovimentacaoEstoque(movimentacao, produtoMovimentacao);
         }
+
+        return gerarMovimentacaoDto(movimentacao);
     }
 
     @Transactional
@@ -176,7 +181,7 @@ public class MovimentacaoServices {
     @Transactional
     public void cancelarMovimentacao(Long idMovimentacao){
         if(!this.usuarioServices.validarUsuario("Usuário não tem permissão para cancelar movimentacao.")){
-            
+            return ;
         }
 
         Movimentacao movimentacao = this.buscarMovimentacaoPorId(idMovimentacao);

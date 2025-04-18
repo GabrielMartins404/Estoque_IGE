@@ -16,5 +16,7 @@ import com.estoqueige.estoqueige.models.enums.MovTipo;
 @Repository
 public interface MovimentacaoRepository extends JpaRepository<Movimentacao, Long> {
     @Query(value = "SELECT * FROM movimentacao WHERE mov_tipo = :tipo AND mov_status = :status", nativeQuery = true)
-    List<Movimentacao> buscarMovimentacaosPorTipo(@Param("tipo")MovTipo tipo, @Param("status")MovStatus status);
+    List<Movimentacao> buscarMovimentacaosPorTipo(@Param("tipo")String tipo, @Param("status")String status);
+    
+
 }

@@ -1,6 +1,7 @@
 package com.estoqueige.estoqueige.services;
 
 import com.estoqueige.estoqueige.dto.RequisitanteDto;
+import com.estoqueige.estoqueige.models.Faculdade;
 import com.estoqueige.estoqueige.models.Requisitante;
 import com.estoqueige.estoqueige.repositories.RequisitanteRepository;
 import com.estoqueige.estoqueige.services.exceptions.ErroAoBuscarObjetos;
@@ -17,9 +18,10 @@ import java.util.Optional;
 @Service
 public class RequisitanteServices {
     private final RequisitanteRepository requisitanteRepository;
-
-    public RequisitanteServices(RequisitanteRepository requisitanteRepository) {
+    private final FaculdadeServices faculdadeServices;
+    public RequisitanteServices(RequisitanteRepository requisitanteRepository, FaculdadeServices faculdadeServices) {
         this.requisitanteRepository = requisitanteRepository;
+        this.faculdadeServices = faculdadeServices;
     }
 
     /* Método services */
@@ -32,11 +34,18 @@ public class RequisitanteServices {
         requisitanteDto.setReqId(requisitante.getReqId());
 
         if(requisitante.getFacRequisitante() != null){
-            requisitanteDto.setReqFacNome(requisitante.getFacRequisitante().getFacNome());
-            requisitanteDto.setReqFacSigla(requisitante.getFacRequisitante().getFacSigla());
+            Faculdade faculdade = this.faculdadeServices.buscarFaculdadePorId(requisitante.getFacRequisitante().getFacId());
+            requisitanteDto.setReqFacNome(faculdade.getFacNome());
+            requisitanteDto.setReqFacSigla(faculdade.getFacSigla());
             requisitanteDto.setReqFaqId(requisitante.getFacRequisitante().getFacId());;
-            
         }
+
+        // if(requisitante.getFacRequisitante() != null){
+        //     requisitanteDto.setReqFacNome(requisitante.getFacRequisitante().getFacNome());
+            
+        //     requisitanteDto.setReqFaqId(requisitante.getFacRequisitante().getFacId());;
+            
+        // }
         return requisitanteDto;
     }
 

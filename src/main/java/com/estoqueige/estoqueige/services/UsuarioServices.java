@@ -119,16 +119,30 @@ public class UsuarioServices {
         return newUsuario;
     }
 
-    public Usuario alterarSenhaDeUsuario(Long id, String senha){
+    public Usuario alterarSenhaDeUsuario(Long id, String senha, String senhaAntiga){
         if(!validarUsuario("Usuário não tem permissão para alterar senha de outros usuários")){
             return null;
         }
         Usuario usuario = this.buscarUsuarioPorId(id);
 
         if(senha != null && !senha.isBlank()){
-            usuario.setUsuSenha(this.bCryptPasswordEncoder.encode(senha));
+            if(this.bCryptPasswordEncoder.matches(senhaAntiga, usuario.getUsuSenha())){ //Se a senha passada pelo usuário após a criptografia é igual ao hash do banco de dados
+                usuario.setUsuSenha(this.bCryptPasswordEncoder.encode(senha));
+            }else{
+                throw new ErroAutorizacao("Senha atual não é a mesma no banco de dados!"); //Refatorar essa mensagem
+            }
         }
+        return this.usuarioRepository.save(usuario);
+    }
 
+    //Esse método serve para que usuários adms possam resetar a senha de usuários que tenham perdido o acesso
+    //Reseta para 123
+    public Usuario resetarSenhaDeUsuario(Long id){
+        if(!validarUsuario("Usuário não tem permissão para alterar senha de outros usuários")){
+            return null;
+        }
+        Usuario usuario = this.buscarUsuarioPorId(id);
+        usuario.setUsuSenha(this.bCryptPasswordEncoder.encode("123"));
         return this.usuarioRepository.save(usuario);
     }
 
