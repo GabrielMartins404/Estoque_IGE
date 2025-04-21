@@ -20,6 +20,7 @@ public class ProdutoDto {
     private Long proCategoriaId;
     private Float proQtd;
     private Float proEstoqueMin;
+    private Float proCusto;
     private Boolean isAbaixoMin;
     private Boolean isAtivo;
     

@@ -5,6 +5,7 @@ import com.estoqueige.estoqueige.dto.ProdutoMovimentacaoDto;
 import com.estoqueige.estoqueige.models.Movimentacao;
 import com.estoqueige.estoqueige.models.Produto;
 import com.estoqueige.estoqueige.models.ProdutoMovimentacao;
+import com.estoqueige.estoqueige.models.Requisitante;
 import com.estoqueige.estoqueige.models.Usuario;
 import com.estoqueige.estoqueige.models.enums.MovStatus;
 import com.estoqueige.estoqueige.models.enums.MovTipo;
@@ -36,11 +37,15 @@ public class MovimentacaoServices {
 
     private final UsuarioServices usuarioServices;
 
-    public MovimentacaoServices(MovimentacaoRepository movimentacaoRepository, MovimentacaoEstoqueServices movimentacaoEstoqueServices, ProdutoServices produtoServices, UsuarioServices usuarioServices) {
+    private final RequisitanteServices requisitanteServices;
+
+
+    public MovimentacaoServices(MovimentacaoRepository movimentacaoRepository, MovimentacaoEstoqueServices movimentacaoEstoqueServices, ProdutoServices produtoServices, UsuarioServices usuarioServices, RequisitanteServices requisitanteServices) {
         this.movimentacaoRepository = movimentacaoRepository;
         this.movimentacaoEstoqueServices = movimentacaoEstoqueServices;
         this.produtoServices = produtoServices;
         this.usuarioServices = usuarioServices;
+        this.requisitanteServices = requisitanteServices;
     }
 
 
@@ -67,6 +72,7 @@ public class MovimentacaoServices {
             //Aqui, chamo a função acima que insere um array de ProdutoMovimentacao com ProdutoDto
             produtoMovimentacaoDtos.add(gerarProdutoMovimentacaoDto(produtoMovimentacao));
         }
+        Requisitante requisitante = this.requisitanteServices.buscarRequisitantePorId(movimentacao.getMovRequisitante().getReqId());
 
         movimentacaoDto.setMovId(movimentacao.getMovId());
         movimentacaoDto.setMovData(movimentacao.getMovData());
@@ -78,7 +84,7 @@ public class MovimentacaoServices {
         movimentacaoDto.setMovOrigem(movimentacao.getMovOrigem());
         movimentacaoDto.setMovTipo(movimentacao.getMovTipo());
         movimentacaoDto.setMovStatus(movimentacao.getMovStatus());
-        movimentacaoDto.setMovRequisitante(movimentacao.getMovRequisitante().getReqNome());
+        movimentacaoDto.setMovRequisitante(requisitante.getReqNome());
         movimentacaoDto.setMovUsuario(movimentacao.getMovUsuario().getUsuNome());
         movimentacaoDto.setProMovProduto(produtoMovimentacaoDtos);
         return movimentacaoDto;
@@ -143,7 +149,8 @@ public class MovimentacaoServices {
                 throw new ErroValidacaoLogica("Não é possível realizar movimentação com quantidade negativa.");
             }else{    
                 
-                Produto produto = this.produtoServices.buscarProdutoPorId(produtoMovimentacao.getProMovProduto().getProId());  
+                //O loop não incrementa diretamente os produtos e sim a clase ProdutoMovimentacao, que além do produto, possui a informação da quantidade
+                Produto produto = this.produtoServices.buscarProdutoPorId(produtoMovimentacao.getProMovProduto().getProId()); 
                 //Verifico se o produto está ativo
                 if(produto.getIsAtivo()){
                     //Verifico aqui se o produto tem estoque disponível para dar saída 
@@ -152,6 +159,7 @@ public class MovimentacaoServices {
                     }else if(!produtoMovimentacao.getProMovProduto().getIsAtivo()){ //Verifico se o produto está ativo
                         throw new ErroValidacaoLogica("O produto '" +produto.getProNome()+ "' está inativo e não pode ser movimentado");
                     }else{
+                        produtoMovimentacao.setProMovProduto(produto);
                         produtoMovimentacao.setProMovMovimentacao(movimentacao);
                     }    
                 }else{
@@ -180,8 +188,8 @@ public class MovimentacaoServices {
 
     @Transactional
     public void cancelarMovimentacao(Long idMovimentacao){
-        if(!this.usuarioServices.validarUsuario("Usuário não tem permissão para cancelar movimentacao.")){
-            return ;
+        if(!usuarioServices.validarUsuario("Usuário não tem permissão para cancelar movimentacao.")){
+            return;
         }
 
         Movimentacao movimentacao = this.buscarMovimentacaoPorId(idMovimentacao);

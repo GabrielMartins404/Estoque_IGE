@@ -91,6 +91,7 @@ public class ProdutoServices {
             catProId,
             produto.getProQtd(),
             produto.getProEstoqueMin(),
+            produto.getProCusto(),
             produto.getIsAbaixoMin(),
             produto.getIsAtivo()
         );

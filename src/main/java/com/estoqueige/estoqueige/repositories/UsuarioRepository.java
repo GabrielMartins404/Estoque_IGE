@@ -13,6 +13,6 @@ import java.util.Optional;
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Optional<Usuario> findByUsuLogin(String usuLogin);
 
-    @Query(value = "SELECT * FROM usuario WHERE is_ativo = 1", nativeQuery = true)
+    @Query(value = "SELECT * FROM usuario WHERE is_ativo = 1 AND usu_id > 1", nativeQuery = true)
     List<Usuario> buscarUsuariosAtivos();
 }
