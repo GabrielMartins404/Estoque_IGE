@@ -60,7 +60,6 @@ public class ProdutoServices {
         // }
 
         //Há vezes em que a categoria e unidade não vem no produto. Desse modo, é preciso busca-las
-        //Depois vou reavaliar se realmente essas duas buscas valem a pena ou se obrigo passar os dados completos no produto (atualmente os produtos podem vir sem o nome da unidade e categoria)
         // Busca a categoria no banco se existir ID
         String catProNome = null;
         Long catProId = null;
