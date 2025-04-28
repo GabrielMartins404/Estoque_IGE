@@ -66,13 +66,13 @@ public class UsuarioServices {
         return usuario.orElseThrow(() -> new ErroAoBuscarObjetos("Não foi possivel encontrar o usuario de id: "+id));
     }
 
-    public List<Usuario> buscarTodosUsuarios() {
+    public List<Usuario> buscarTodosUsuarios(Boolean status) {
         
         if(!validarUsuario("Usuário não tem permissão para buscar outros usuários!!!")){
             return null;
         }
         
-        List<Usuario> usuarios = this.usuarioRepository.buscarUsuariosAtivos();
+        List<Usuario> usuarios = this.usuarioRepository.buscarUsuarios(status);
         return usuarios;
         
     }

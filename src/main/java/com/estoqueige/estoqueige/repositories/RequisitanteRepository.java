@@ -11,6 +11,6 @@ import com.estoqueige.estoqueige.models.Requisitante;
 
 @Repository
 public interface RequisitanteRepository extends JpaRepository<Requisitante, Long>{
-    @Query(value = "SELECT * FROM requisitante WHERE is_ativo = 1", nativeQuery = true)
+    @Query(value = "SELECT * FROM requisitante WHERE is_ativo = 1 and req_id > 1", nativeQuery = true)
     List<Requisitante> buscarRequisitantesAtivos();
 }
