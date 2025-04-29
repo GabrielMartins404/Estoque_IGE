@@ -8,12 +8,7 @@ import java.util.stream.Collectors;
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.cors.CorsConfigurationSource;
-import com.estoqueige.estoqueige.EstoqueIgeApplication;
-import com.estoqueige.estoqueige.controllers.FaculdadeController;
-import com.estoqueige.estoqueige.repositories.FaculdadeRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

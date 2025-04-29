@@ -39,6 +39,10 @@ public class ProdutoMovimentacao {
     @PositiveOrZero(message = "A quantidade do item na movimentação não pode ser negativo")
     private Float proMovQtdProduto;
 
+    @Column(name = "proMovCustoProduto", nullable = false)
+    @NotNull(message = "O custo do produto não pode ser nulo")
+    private Float proMovCustoProduto = 0f;
+
     /* Definição das chaves estrangeiras */
     @ManyToOne
     @JoinColumn(name = "proMovProduto", nullable = false)

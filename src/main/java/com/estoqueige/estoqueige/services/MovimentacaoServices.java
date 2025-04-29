@@ -110,10 +110,6 @@ public class MovimentacaoServices {
     public List<MovimentacaoDto> buscarTodasMovimentacoes(String tipo, String status){
         MovTipo movTipo = MovTipo.movTipo(tipo);
         MovStatus movStatus = MovStatus.movStatus(status);
-
-        
-        // System.out.println("========== Tipo: "+ );
-        // System.out.println("========== Status: "+ );
         List<Movimentacao> movimentacoes = this.movimentacaoRepository.buscarMovimentacaosPorTipo(movTipo.name(), movStatus.name());
         List<MovimentacaoDto> movimentacaoDtos = new ArrayList<>();
         
@@ -159,8 +155,8 @@ public class MovimentacaoServices {
                     }else if(!produtoMovimentacao.getProMovProduto().getIsAtivo()){ //Verifico se o produto está ativo
                         throw new ErroValidacaoLogica("O produto '" +produto.getProNome()+ "' está inativo e não pode ser movimentado");
                     }else{
-                        produtoMovimentacao.setProMovProduto(produto);
-                        produtoMovimentacao.setProMovMovimentacao(movimentacao);
+                        produtoMovimentacao.setProMovProduto(produto); //Seto as informações do produto
+                        produtoMovimentacao.setProMovMovimentacao(movimentacao); //Seto a informação da movimentacao
                     }    
                 }else{
                     throw new ErroValidacaoLogica("Produto "+produto.getProNome()+" está inativo e não pode ser movimentado!");
