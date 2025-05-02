@@ -55,6 +55,9 @@ public class Movimentacao {
     @Column(name = "movNumRequisicao", nullable = true)
     private Long movNumRequisicao;
 
+    @Column(name = "movObservacao", columnDefinition = "TEXT", nullable = true)
+    private String movObservacao;
+
     @Column(name = "movData", nullable = false)
     private LocalDate movData;
 

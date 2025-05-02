@@ -102,8 +102,8 @@ public class ProdutoServices {
         return produto;
     }
 
-    public List<ProdutoDto> buscarTodosProdutos() {
-        List<Produto> produtos = this.produtoRepository.buscarProdutosAtivos();
+    public List<ProdutoDto> buscarTodosProdutos(Boolean status) {
+        List<Produto> produtos = this.produtoRepository.buscarProdutos(status);
         
         List<ProdutoDto> produtoDtos = new ArrayList<>();
         for (Produto produto : produtos) {
@@ -115,6 +115,11 @@ public class ProdutoServices {
     public ProdutoDto cadastrarProduto(Produto produto) {
         produto.setProId(null);
         
+        //Por regra de negócio, é preciso bloquear o cadastro de um produto com descrição repetida
+        if(this.produtoRepository.existsByProDescricaoAndIsAtivoTrue(produto.getProDescricao())){
+            throw new ErroValidacaoLogica("Não é possivel atualizar produto pois já existe outro com a mesma descrição");
+        }
+
         //Verifico se o produto tem categoria inserido
         if (produto.getProCategoria() == null 
             || produto.getProCategoria().getCatProId() == null 

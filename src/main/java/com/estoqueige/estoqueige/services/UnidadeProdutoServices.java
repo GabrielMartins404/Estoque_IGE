@@ -26,8 +26,8 @@ public class UnidadeProdutoServices {
         return unidadeProduto.orElseThrow(() -> new ErroAoBuscarObjetos("Falha ao buscar Unidade do Produto por ID: "+ id));
     }
 
-    public List<UnidadeProduto> buscarTodasUnidadeProdutos(){
-        List<UnidadeProduto> unidadeProdutos = this.unidadeProdutoRepository.buscarUnidadesAtivas();
+    public List<UnidadeProduto> buscarTodasUnidadeProdutos(Boolean status){
+        List<UnidadeProduto> unidadeProdutos = this.unidadeProdutoRepository.buscarUnidades(status);
         return unidadeProdutos;
     }
 

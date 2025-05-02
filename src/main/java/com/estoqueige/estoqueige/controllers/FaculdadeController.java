@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @Validated
@@ -37,8 +38,8 @@ public class FaculdadeController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<Faculdade>> buscarFaculdades() {
-        List<Faculdade> faculdades = this.faculdadeServices.buscarTodasFaculdades();
+    public ResponseEntity<List<Faculdade>> buscarFaculdades(@RequestParam Boolean status) {
+        List<Faculdade> faculdades = this.faculdadeServices.buscarTodasFaculdades(status);
         return ResponseEntity.ok().body(faculdades);
     }
 

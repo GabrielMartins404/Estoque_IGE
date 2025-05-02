@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @Validated
@@ -37,8 +38,8 @@ public class CategoriaProdutoController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<CategoriaProduto>> buscarCategoriaProdutos() {
-        List<CategoriaProduto> categoriaProduto = this.categoriaProdutoServices.buscarTodasCategoriaProdutos();
+    public ResponseEntity<List<CategoriaProduto>> buscarCategoriaProdutos(@RequestParam Boolean status) {
+        List<CategoriaProduto> categoriaProduto = this.categoriaProdutoServices.buscarTodasCategoriaProdutos(status);
         return ResponseEntity.ok().body(categoriaProduto);
     }
 

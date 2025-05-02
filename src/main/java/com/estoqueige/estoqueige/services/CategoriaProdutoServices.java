@@ -26,8 +26,8 @@ public class CategoriaProdutoServices {
         return categoriaProduto.orElseThrow(() -> new ErroAoBuscarObjetos("Falha ao buscar cagoria por ID: "+ id));
     }
 
-    public List<CategoriaProduto> buscarTodasCategoriaProdutos(){
-        List<CategoriaProduto> categoriaProduto = this.categoriaProdutoRepository.buscarCategoriasAtivas();
+    public List<CategoriaProduto> buscarTodasCategoriaProdutos(Boolean status){
+        List<CategoriaProduto> categoriaProduto = this.categoriaProdutoRepository.buscarCategorias(status);
         return categoriaProduto;
     }
 
