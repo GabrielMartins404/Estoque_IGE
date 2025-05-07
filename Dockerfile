@@ -25,5 +25,8 @@ COPY --from=build /usr/src/estoqueige/estoqueige.jar estoqueige.jar
 # Expõe a porta da aplicação
 EXPOSE 8080
 
+#Configuração para evitar vazamento de memória
+ENV JAVA_OPTS="-Xms256m -Xmx500m"
+
 # Define o comando de inicialização do container
 ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "estoqueige.jar"]
