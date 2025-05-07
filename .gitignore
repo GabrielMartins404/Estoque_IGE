@@ -1,36 +1,39 @@
-HELP.md
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+# Arquivos de ambiente
+.env
+*.env
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+# Logs
+*.log
+logs/
+**/logs/
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
+# Diretórios e arquivos do Docker
+docker-compose.override.yml
+docker-compose.override.yaml
+docker-compose.local.yml
+docker-compose.local.yaml
+*.pid
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
+# Volumes docker se estiver usando bind mounts ou arquivos auxiliares
+mysqlvolume/
 
-### VS Code ###
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db
+
+# Arquivos temporários
+*.tmp
+*.swp
+*.bak
+
+# Configs de IDE
 .vscode/
+.idea/
+*.iml
 
-# Propriedades
-# /src/main/resources/application.properties
+# Arquivos de build docker (se eventualmente forem gerados)
+*.tar
+*.img
+
+# Node Modules ou outras libs se por acaso forem parar na raiz
+node_modules/

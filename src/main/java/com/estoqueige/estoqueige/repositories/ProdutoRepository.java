@@ -1,6 +1,7 @@
 package com.estoqueige.estoqueige.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,9 +13,14 @@ import com.estoqueige.estoqueige.repositories.projections.ResumoQtdProdutoMovime
 
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, Long>{
-    @Query(value = "SELECT * FROM produto WHERE is_ativo = 1", nativeQuery = true)
-    List<Produto> buscarProdutosAtivos();
+    @Query(value = "SELECT * FROM produto WHERE is_ativo = :status", nativeQuery = true)
+    List<Produto> buscarProdutos(@Param("status")Boolean status);
 
+    //Aqui verifico se existe um produto com uma determinada descrição
+    boolean existsByProDescricaoAndIsAtivoTrue(String descricao);
+
+
+    /* No futuro, essas querys deverão ser refatoradas para um repository apropriado */
     //Essa query serve para retornar a qtd de produtos ativos. Está presente na tela de dashboard
     @Query(value = """
         SELECT COUNT(p.pro_id)

@@ -80,6 +80,7 @@ public class MovimentacaoServices {
         movimentacaoDto.setMovDataCancelamento(movimentacao.getMovDataCancelamento());
         movimentacaoDto.setMovHorarioCancelamento(movimentacao.getMovHorarioCancelamento());
         movimentacaoDto.setMovNf(movimentacao.getMovNf());
+        movimentacaoDto.setMovObservacao(movimentacao.getMovObservacao());
         movimentacaoDto.setMovNumRequisicao(movimentacao.getMovNumRequisicao());
         movimentacaoDto.setMovOrigem(movimentacao.getMovOrigem());
         movimentacaoDto.setMovTipo(movimentacao.getMovTipo());

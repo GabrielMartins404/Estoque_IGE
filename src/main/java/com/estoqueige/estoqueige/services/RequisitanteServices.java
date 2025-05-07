@@ -54,8 +54,8 @@ public class RequisitanteServices {
         return requisitante.orElseThrow(() -> new ErroAoBuscarObjetos("Não foi possivel encontrar o requisitante com id: "+id));
     }
 
-    public List<RequisitanteDto> buscarTodosRequisitantes() {
-        List<Requisitante> requisitantes = this.requisitanteRepository.buscarRequisitantesAtivos();
+    public List<RequisitanteDto> buscarTodosRequisitantes(Boolean status) {
+        List<Requisitante> requisitantes = this.requisitanteRepository.buscarRequisitantes(status);
         
         List<RequisitanteDto> requisitanteDtos = new ArrayList<>();
         for (Requisitante requisitante : requisitantes) {

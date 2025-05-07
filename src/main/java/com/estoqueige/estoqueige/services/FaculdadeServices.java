@@ -26,8 +26,8 @@ public class FaculdadeServices {
         return faculdade.orElseThrow(() -> new ErroAoBuscarObjetos("Falha ao buscar faculdade por ID: "+ id));
     }
 
-    public List<Faculdade> buscarTodasFaculdades(){
-        List<Faculdade> faculdades = this.faculdadeRepository.buscarFaculdadesAtivas();
+    public List<Faculdade> buscarTodasFaculdades(Boolean status){
+        List<Faculdade> faculdades = this.faculdadeRepository.buscarFaculdades(status);
         return faculdades;
     }
 

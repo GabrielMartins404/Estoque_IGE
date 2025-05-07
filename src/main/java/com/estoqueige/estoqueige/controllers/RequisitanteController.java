@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -39,8 +40,8 @@ public class RequisitanteController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<RequisitanteDto>> buscarRequisitantes() {
-        List<RequisitanteDto> requisitantes = this.requisitanteServices.buscarTodosRequisitantes();
+    public ResponseEntity<List<RequisitanteDto>> buscarRequisitantes(@RequestParam Boolean status) {
+        List<RequisitanteDto> requisitantes = this.requisitanteServices.buscarTodosRequisitantes(status);
         return ResponseEntity.ok().body(requisitantes);
     }
 
